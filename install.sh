@@ -73,5 +73,10 @@ else
   warn "npx not found — skipping agent skills (install Node, then run setup/skills.sh)"
 fi
 
+# --- 5. CLI tools (curl-installed binaries) -----------------------------------
+info "Installing CLI tools..."
+bash "$REPO_DIR/setup/tools.sh"
+ok "CLI tools installed"
+
 echo
 info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
