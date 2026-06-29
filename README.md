@@ -68,6 +68,8 @@ binaries + the firstmate clone).
 LazyVim, leader = `<Space>`. Neovim is **modal** — that's the part that trips
 people up. Press `<Space>` and pause anytime to get the which-key menu.
 
+**→ Also at [docs/nvim.md](docs/nvim.md)** — open from inside nvim with `:e ~/Agentic-Workflow/docs/nvim.md`.
+
 **Modes**
 
 | Key | Mode |
