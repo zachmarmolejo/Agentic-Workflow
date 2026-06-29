@@ -64,5 +64,14 @@ else
   ok "added starship init to ~/.zshrc"
 fi
 
+# --- 4. Agent skills ----------------------------------------------------------
+if command -v npx >/dev/null 2>&1; then
+  info "Installing agent skills..."
+  bash "$REPO_DIR/setup/skills.sh"
+  ok "agent skills installed"
+else
+  warn "npx not found — skipping agent skills (install Node, then run setup/skills.sh)"
+fi
+
 echo
 info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
