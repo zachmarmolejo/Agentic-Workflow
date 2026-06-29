@@ -10,3 +10,9 @@ echo "==> no-mistakes (AI validation gate: push -> review/test/lint/docs -> clea
 curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh | sh
 
 # (treehouse and other curl-installed binaries get added here as we go)
+
+# --- npm-global tools ---
+if command -v npm >/dev/null 2>&1; then
+  echo "==> gnhf (good night, have fun — bounded autonomous overnight loop)"
+  npm install -g gnhf
+fi
