@@ -48,6 +48,7 @@ link_file() {
 info "Linking dotfiles..."
 link_file "$REPO_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua"
 link_file "$REPO_DIR/config/starship.toml"       "$HOME/.config/starship.toml"
+link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
 # --- 3. Shell init ------------------------------------------------------------
 info "Wiring shell prompt..."
