@@ -35,6 +35,7 @@ overwrite to `<file>.bak.<timestamp>`.
    - `config/wezterm/wezterm.lua` → `~/.config/wezterm/wezterm.lua`
    - `config/starship.toml` → `~/.config/starship.toml`
    - `config/nvim/` → `~/.config/nvim/` (LazyVim)
+   - `config/agents/AGENTS.md` → `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
 3. Appends the Starship init line to `~/.zshrc` (only if not already there).
 
 ## Agentic toolchain
@@ -62,6 +63,19 @@ binaries + the firstmate clone).
 > security tool for agent use). Kept on purpose: near-zero cost (one lazy-loaded
 > `SKILL.md`) and the foundation the other AXI tools (`lavish`, `no-mistakes`,
 > `gh-axi`) build on.
+
+## Global agent instructions
+
+One file, every agent. `config/agents/AGENTS.md` holds my global agent rules and
+is symlinked to all three targets so they never drift:
+
+- `~/.claude/CLAUDE.md` — Claude Code (loaded into every session)
+- `~/AGENTS.md` — the cross-agent [AGENTS.md](https://agents.md) standard
+- `~/.codex/AGENTS.md` — Codex
+
+Edit `config/agents/AGENTS.md` once and every agent picks it up. It can point to
+optional on-demand companions: `~/OPINIONS.md` (viewpoints) and `~/VOICE.md`
+(writing voice).
 
 ## Neovim cheat sheet
 
@@ -125,6 +139,8 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 │   ├── wezterm/
 │   │   └── wezterm.lua     # terminal appearance + behavior
 │   ├── nvim/               # LazyVim config (rose-pine-moon, transparent)
+│   ├── agents/
+│   │   └── AGENTS.md       # global agent instructions (Claude/Codex/AGENTS.md)
 │   └── starship.toml       # prompt
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
