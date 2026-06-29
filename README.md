@@ -63,6 +63,56 @@ binaries + the firstmate clone).
 > `SKILL.md`) and the foundation the other AXI tools (`lavish`, `no-mistakes`,
 > `gh-axi`) build on.
 
+## Neovim cheat sheet
+
+LazyVim, leader = `<Space>`. Neovim is **modal** — that's the part that trips
+people up. Press `<Space>` and pause anytime to get the which-key menu.
+
+**Modes**
+
+| Key | Mode |
+|-----|------|
+| `i` / `a` | insert — type text |
+| `<Esc>` | back to **normal** mode (stop editing) |
+| `v` | visual — select |
+| `:` | command line |
+
+**Get out / around**
+
+| Key | Action |
+|-----|--------|
+| `<Space>h` | back to the dashboard (custom keymap) |
+| `<Space>` then wait | which-key menu — shows everything |
+| `:w` · `:q` · `:wq` | save · quit window · save+quit |
+| `<Space>qq` | quit all |
+
+**Buffers (open files)**
+
+| Key | Action |
+|-----|--------|
+| `<Space>,` | list / switch buffers |
+| `<Space>bb` | switch to previous buffer |
+| `<Space>bd` | close current buffer |
+| `<Space>bD` | close buffer + window |
+
+**Windows / splits**
+
+| Key | Action |
+|-----|--------|
+| `<Space>-` · `<Space>\|` | split below · split right |
+| `<C-h/j/k/l>` | move between splits |
+| `<Space>wd` | close current split |
+| `<C-w>o` | unsplit — close all *other* splits |
+
+**Files & search**
+
+| Key | Action |
+|-----|--------|
+| `<Space>ff` | find files |
+| `<Space>/` | grep in project |
+| `<Space>e` | file explorer |
+| `<Space>fn` | new file |
+
 ## Structure
 
 ```
