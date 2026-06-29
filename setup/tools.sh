@@ -9,7 +9,8 @@ set -euo pipefail
 echo "==> no-mistakes (AI validation gate: push -> review/test/lint/docs -> clean PR)"
 curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh | sh
 
-# (treehouse and other curl-installed binaries get added here as we go)
+echo "==> treehouse (reusable pre-warmed git worktree pool for parallel agents)"
+curl -fsSL https://kunchenguid.github.io/treehouse/install.sh | sh
 
 # --- npm-global tools ---
 if command -v npm >/dev/null 2>&1; then
