@@ -21,4 +21,7 @@ add_skill() {
 # AXI — design principles for agent-ergonomic CLIs
 add_skill kunchenguid/axi axi
 
-# (more get added here as the workflow grows: lavish, no-mistakes, ...)
+# lavish — open agent-generated HTML artifacts for click-to-annotate feedback
+add_skill kunchenguid/lavish-axi lavish
+
+# (more get added here as the workflow grows: no-mistakes, ...)
