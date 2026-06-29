@@ -50,6 +50,11 @@ link_file "$REPO_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.
 link_file "$REPO_DIR/config/starship.toml"       "$HOME/.config/starship.toml"
 link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
+# Global agent instructions — one file shared by Claude Code, Codex, and AGENTS.md
+link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
+link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.claude/CLAUDE.md"
+link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.codex/AGENTS.md"
+
 # --- 3. Shell init ------------------------------------------------------------
 info "Wiring shell prompt..."
 ZSHRC="$HOME/.zshrc"
