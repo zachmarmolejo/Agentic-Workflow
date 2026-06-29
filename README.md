@@ -3,8 +3,8 @@
 My tailored development + agentic-workflow setup, in code — so a fresh Mac is one
 command away from feeling like home.
 
-This starts with the terminal stack (WezTerm + Starship, `rose-pine-moon` theme)
-and will grow to cover the rest of my workflow over time.
+It covers the terminal stack (WezTerm + Starship, `rose-pine-moon` theme) and a
+seven-tool agentic toolchain, and will grow to cover the rest of my workflow.
 
 ## Quick start
 
@@ -35,17 +35,31 @@ overwrite to `<file>.bak.<timestamp>`.
    - `config/starship.toml` → `~/.config/starship.toml`
 3. Appends the Starship init line to `~/.zshrc` (only if not already there).
 
-## Agent skills & tools
+## Agentic toolchain
 
-Beyond the terminal, this repo installs Kun Chen's agentic toolchain via
-`setup/skills.sh` (Claude Code skills) and `setup/tools.sh` (CLI binaries).
+Beyond the terminal, this repo installs Kun Chen's agentic toolchain — seven
+tools that compose into one workflow but each run standalone. Installed via the
+`Brewfile`, `setup/skills.sh` (Claude Code skills), and `setup/tools.sh` (CLI
+binaries + the firstmate clone).
+
+| # | Tool | What it does | Run it |
+|---|------|--------------|--------|
+| 1 | OpenSuperWhisper | Push-to-talk dictation in any text field | menu bar |
+| 2 | [AXI](https://axi.md) | Principles for agent-ergonomic CLIs (reference skill) | `/axi` |
+| 3 | lavish | Open agent HTML artifacts for click-to-annotate feedback | `/lavish` · `lavish-axi` |
+| 4 | no-mistakes | AI gate: push → review/test/lint/docs → clean PR | `git push no-mistakes` |
+| 5 | gnhf | Bounded autonomous loop (one committed change per iteration) | `gnhf "objective"` |
+| 6 | treehouse | Reusable isolated git worktree pool for parallel agents | `treehouse` |
+| 7 | firstmate | Talk to one agent; it runs a crew in tmux and hands you PRs | `cd ~/firstmate && claude` |
+
+**→ [docs/tools.md](docs/tools.md) — how to run each tool in isolation.**
 
 > **Note — `axi` is a reference / build-time skill, not a daily driver.** It
-> teaches the agent the [AXI](https://axi.md) principles for building
-> agent-ergonomic CLIs and only activates when you're *authoring or reviewing a
-> CLI* (e.g. wrapping a security tool for agent use). Kept on purpose: it's
-> near-zero cost (one lazy-loaded `SKILL.md`) and is the foundation the other
-> AXI tools here — `lavish`, `no-mistakes` — are built on.
+> teaches the agent the AXI principles for building agent-ergonomic CLIs and
+> only fires when you're *authoring or reviewing a CLI* (e.g. wrapping a
+> security tool for agent use). Kept on purpose: near-zero cost (one lazy-loaded
+> `SKILL.md`) and the foundation the other AXI tools (`lavish`, `no-mistakes`,
+> `gh-axi`) build on.
 
 ## Structure
 
@@ -60,19 +74,20 @@ Beyond the terminal, this repo installs Kun Chen's agentic toolchain via
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
 ├── setup/
-│   ├── skills.sh           # installs agent skills (axi [reference], lavish, ...)
-│   └── tools.sh            # installs CLI binaries (no-mistakes, ...)
+│   ├── skills.sh           # installs agent skills (axi [reference], lavish)
+│   └── tools.sh            # installs CLI binaries (no-mistakes, treehouse, gnhf, AXI CLIs) + clones firstmate
+├── docs/
+│   └── tools.md            # how to run each agentic tool in isolation
 └── assets/                 # wallpaper / screenshots
 ```
 
 ## Roadmap
 
-Things to fold in next:
-
+- [x] Terminal stack (WezTerm + Starship, rose-pine-moon)
+- [x] Agentic toolchain (OpenSuperWhisper · AXI · lavish · no-mistakes · gnhf · treehouse · firstmate)
 - [ ] Desktop wallpaper (lakeside pagoda at sunset — see `assets/`)
-- [ ] Claude Code / agent configuration
 - [ ] Neovim
-- [ ] Security-lab tooling
+- [ ] Security-lab tooling (wrap recon/scan CLIs as AXI tools)
 
 ## Credits
 
