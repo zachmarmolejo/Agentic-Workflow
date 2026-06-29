@@ -18,7 +18,9 @@ add_skill() {
   npx -y skills add "$repo" --global --agent claude-code --skill "$skill" --yes
 }
 
-# AXI — design principles for agent-ergonomic CLIs
+# AXI — design principles for agent-ergonomic CLIs.
+# Reference / build-time skill: only fires when authoring or reviewing a CLI.
+# Near-zero cost and underpins the other AXI tools (lavish, no-mistakes).
 add_skill kunchenguid/axi axi
 
 # lavish — open agent-generated HTML artifacts for click-to-annotate feedback

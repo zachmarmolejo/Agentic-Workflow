@@ -35,6 +35,18 @@ overwrite to `<file>.bak.<timestamp>`.
    - `config/starship.toml` → `~/.config/starship.toml`
 3. Appends the Starship init line to `~/.zshrc` (only if not already there).
 
+## Agent skills & tools
+
+Beyond the terminal, this repo installs Kun Chen's agentic toolchain via
+`setup/skills.sh` (Claude Code skills) and `setup/tools.sh` (CLI binaries).
+
+> **Note — `axi` is a reference / build-time skill, not a daily driver.** It
+> teaches the agent the [AXI](https://axi.md) principles for building
+> agent-ergonomic CLIs and only activates when you're *authoring or reviewing a
+> CLI* (e.g. wrapping a security tool for agent use). Kept on purpose: it's
+> near-zero cost (one lazy-loaded `SKILL.md`) and is the foundation the other
+> AXI tools here — `lavish`, `no-mistakes` — are built on.
+
 ## Structure
 
 ```
@@ -47,6 +59,9 @@ overwrite to `<file>.bak.<timestamp>`.
 │   └── starship.toml       # prompt
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
+├── setup/
+│   ├── skills.sh           # installs agent skills (axi [reference], lavish, ...)
+│   └── tools.sh            # installs CLI binaries (no-mistakes, ...)
 └── assets/                 # wallpaper / screenshots
 ```
 
