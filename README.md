@@ -26,6 +26,7 @@ overwrite to `<file>.bak.<timestamp>`.
 | Terminal | [WezTerm](https://wezfurlong.org/wezterm/) | `rose-pine-moon` theme, Hack Nerd Font, 80% opacity + macOS background blur, rose-tinted tab bar that hides on a single tab |
 | Prompt | [Starship](https://starship.rs/) | blue dir · gray git branch · yellow command-duration · purple `❯` |
 | Font | Hack Nerd Font | glyphs/icons the prompt relies on |
+| Editor | [Neovim](https://neovim.io/) + [LazyVim](https://lazyvim.org/) | rose-pine-moon (transparent to match), LSP · completion · telescope · treesitter |
 
 ## What `install.sh` does
 
@@ -33,6 +34,7 @@ overwrite to `<file>.bak.<timestamp>`.
 2. Symlinks the configs into place (so edits in this repo are live):
    - `config/wezterm/wezterm.lua` → `~/.config/wezterm/wezterm.lua`
    - `config/starship.toml` → `~/.config/starship.toml`
+   - `config/nvim/` → `~/.config/nvim/` (LazyVim)
 3. Appends the Starship init line to `~/.zshrc` (only if not already there).
 
 ## Agentic toolchain
@@ -70,6 +72,7 @@ binaries + the firstmate clone).
 ├── config/
 │   ├── wezterm/
 │   │   └── wezterm.lua     # terminal appearance + behavior
+│   ├── nvim/               # LazyVim config (rose-pine-moon, transparent)
 │   └── starship.toml       # prompt
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
@@ -86,7 +89,7 @@ binaries + the firstmate clone).
 - [x] Terminal stack (WezTerm + Starship, rose-pine-moon)
 - [x] Agentic toolchain (OpenSuperWhisper · AXI · lavish · no-mistakes · gnhf · treehouse · firstmate)
 - [ ] Desktop wallpaper (lakeside pagoda at sunset — see `assets/`)
-- [ ] Neovim
+- [x] Neovim (LazyVim, rose-pine-moon)
 - [ ] Security-lab tooling (wrap recon/scan CLIs as AXI tools)
 
 ## Credits
