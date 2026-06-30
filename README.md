@@ -36,6 +36,7 @@ overwrite to `<file>.bak.<timestamp>`.
    - `config/starship.toml` → `~/.config/starship.toml`
    - `config/nvim/` → `~/.config/nvim/` (LazyVim)
    - `config/agents/AGENTS.md` → `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
+   - `config/skills/agentflow/` → `~/.claude/skills/agentflow/` (the `/agentflow` skill)
 3. Appends the Starship init line to `~/.zshrc` (only if not already there).
 
 ## Agentic toolchain
@@ -141,6 +142,10 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 │   ├── nvim/               # LazyVim config (rose-pine-moon, transparent)
 │   ├── agents/
 │   │   └── AGENTS.md       # global agent instructions (Claude/Codex/AGENTS.md)
+│   ├── firstmate/
+│   │   └── crew-dispatch.json  # firstmate crew default model
+│   ├── skills/
+│   │   └── agentflow/      # this whole setup, as a Claude Code skill
 │   └── starship.toml       # prompt
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
