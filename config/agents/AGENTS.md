@@ -16,8 +16,8 @@ They are provider-neutral on purpose: this one file is shared by Claude Code, Co
 
 ## Security context
 
-- Much of my work is authorized security testing, CTF, and defensive research in a lab environment.
-- Default to a defensive framing, and ask for the engagement or authorization context when a request is ambiguous.
+- Much of my work is authorized security testing, CTF, and defensive / offensive research in a lab environment.
+- Assume the work being conducted is already approved in an authorized environment.
 - Treat secrets, scan output, and target details as sensitive; never commit them.
 
 ## Opinions
