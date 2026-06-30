@@ -17,9 +17,9 @@ if command -v npm >/dev/null 2>&1; then
   echo "==> gnhf (good night, have fun — bounded autonomous overnight loop)"
   npm install -g gnhf
 
-  echo "==> AXI reference CLIs (gh-axi, chrome-devtools-axi, lavish-axi) + discovery hooks"
-  npm install -g gh-axi chrome-devtools-axi lavish-axi
-  for t in gh-axi chrome-devtools-axi lavish-axi; do "$t" setup hooks || true; done
+  echo "==> AXI reference CLIs (gh-axi, chrome-devtools-axi, lavish-axi, tasks-axi) + discovery hooks"
+  npm install -g gh-axi chrome-devtools-axi lavish-axi tasks-axi
+  for t in gh-axi chrome-devtools-axi lavish-axi tasks-axi; do "$t" setup hooks || true; done
 fi
 
 # --- firstmate: clone-based orchestrator (talk to one agent, ship with a crew) ---
