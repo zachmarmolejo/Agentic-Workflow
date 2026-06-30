@@ -101,3 +101,5 @@ bash ~/firstmate/bin/fm-bootstrap.sh   # toolchain self-check (silent = ready)
 ```
 - Projects are cloned under `~/firstmate/projects/`; crewmate tmux windows are named `fm-<id>`.
 - Depends on **treehouse + no-mistakes + tmux** (all installed here). Update with `/updatefirstmate`.
+
+> **Expected warning:** launching `claude` inside `~/firstmate` shows "CLAUDE.md is over the 40.0k-char limit (~88k chars)". That file is firstmate's full orchestrator manual (`CLAUDE.md` -> `AGENTS.md`); Claude Code loads it in full despite the warning, so it's cosmetic - nothing to fix, and don't trim it.
