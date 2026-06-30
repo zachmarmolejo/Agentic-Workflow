@@ -55,6 +55,9 @@ link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.claude/CLAUDE.md"
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.codex/AGENTS.md"
 
+# agentflow skill — captures this whole setup; loads on demand in Claude Code
+link_file "$REPO_DIR/config/skills/agentflow"    "$HOME/.claude/skills/agentflow"
+
 # --- 3. Shell init ------------------------------------------------------------
 info "Wiring shell prompt..."
 ZSHRC="$HOME/.zshrc"
