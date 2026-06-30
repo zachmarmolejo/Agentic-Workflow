@@ -121,6 +121,16 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 | `<Space>wd` | close current split |
 | `<C-w>o` | unsplit — close all *other* splits |
 
+**Search in a file**
+
+| Key | Action |
+|-----|--------|
+| `/text` then `<Enter>` | search forward to the first match |
+| `?text` then `<Enter>` | search backward |
+| `n` / `N` | jump to next / previous match |
+| `*` / `#` | search the word under the cursor (forward / back) |
+| `<Esc>` or `:noh` | clear the match highlight |
+
 **Files & search**
 
 | Key | Action |
