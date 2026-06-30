@@ -1,0 +1,4 @@
+{
+  "rules": [],
+  "default": { "harness": "claude", "model": "claude-opus-4-6", "effort": "medium" }
+}

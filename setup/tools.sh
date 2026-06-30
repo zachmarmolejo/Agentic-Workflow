@@ -6,6 +6,8 @@
 #
 set -euo pipefail
 
+TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "==> no-mistakes (AI validation gate: push -> review/test/lint/docs -> clean PR)"
 curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh | sh
 
@@ -29,4 +31,14 @@ if [ -d "$HOME/firstmate/.git" ]; then
 else
   echo "==> firstmate (cloning to ~/firstmate)"
   git clone https://github.com/kunchenguid/firstmate "$HOME/firstmate"
+fi
+
+# Seed firstmate's local crew-dispatch profile (which model/effort crewmates spawn
+# with). It's gitignored in firstmate, so upstream updates never touch it. Only
+# seed when absent, so local edits are never clobbered.
+if [ -d "$HOME/firstmate" ] && [ ! -f "$HOME/firstmate/config/crew-dispatch.json" ] \
+   && [ -f "$TOOLS_DIR/firstmate/crew-dispatch.json" ]; then
+  mkdir -p "$HOME/firstmate/config"
+  cp "$TOOLS_DIR/firstmate/crew-dispatch.json" "$HOME/firstmate/config/crew-dispatch.json"
+  echo "    seeded firstmate config/crew-dispatch.json (crew default: claude/opus-4.6)"
 fi
