@@ -121,6 +121,15 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 | `<Space>wd` | close current split |
 | `<C-w>o` | unsplit — close all *other* splits |
 
+**Copy & paste (yank)** - yanks sync to the macOS clipboard, so `y` = `Cmd+C`; "cut" is just delete (`dd`/`dw`/`x`) then `p`.
+
+| Key | Action |
+|-----|--------|
+| `yy` / `Y` | copy the current line |
+| `yw` · `y$` | copy a word · to end of line |
+| `v`/`V`/`<C-v>`, then `y` | select (char/line/block), then copy |
+| `p` / `P` | paste after / before the cursor |
+
 **Search in a file**
 
 | Key | Action |
