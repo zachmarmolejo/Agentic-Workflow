@@ -43,6 +43,19 @@ pause anytime to get the which-key menu, which lists every shortcut.
 | `<Space>wd` | close current split |
 | `<C-w>o` | unsplit — close all *other* splits |
 
+## Copy & paste (yank)
+
+Yanks sync to the macOS clipboard (`clipboard=unnamedplus`), so `y` = `Cmd+C` and `p` pastes what you copied anywhere. "Cut" is just delete - `dd`/`dw`/`x` copy into the register, then `p`.
+
+| Key | Action |
+|-----|--------|
+| `yy` / `Y` | copy the current line |
+| `yw` | copy a word |
+| `y$` | copy to end of line |
+| `v` / `V` / `<C-v>`, then `y` | select (char / line / block), then copy |
+| `p` / `P` | paste after / before the cursor |
+| `<n>yy` | copy `<n>` lines (counts work on any yank) |
+
 ## Search in a file
 
 | Key | Action |
