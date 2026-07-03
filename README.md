@@ -1,10 +1,12 @@
 # Agentic-Workflow
 
-My tailored development + agentic-workflow setup, in code — so a fresh Mac is one
+My tailored development + agentic-workflow setup, in code - so a fresh machine is one
 command away from feeling like home.
 
 It covers the terminal stack (WezTerm + Starship, `rose-pine-moon` theme) and a
 seven-tool agentic toolchain, and will grow to cover the rest of my workflow.
+
+Runs on **macOS** and **Linux** (Debian/Ubuntu, Fedora/RHEL, Arch).
 
 ## Quick start
 
@@ -30,14 +32,18 @@ overwrite to `<file>.bak.<timestamp>`.
 
 ## What `install.sh` does
 
-1. Installs Homebrew if missing, then installs everything in `Brewfile`.
+1. Installs packages:
+   - **macOS**: Homebrew + everything in `Brewfile`
+   - **Linux**: native package manager (apt/dnf/pacman) + official installers for starship, neovim (tarball fallback when distro version < 0.10), Hack Nerd Font, wezterm
+   - OpenSuperWhisper is macOS-only and skipped on Linux with a note
 2. Symlinks the configs into place (so edits in this repo are live):
-   - `config/wezterm/wezterm.lua` → `~/.config/wezterm/wezterm.lua`
-   - `config/starship.toml` → `~/.config/starship.toml`
-   - `config/nvim/` → `~/.config/nvim/` (LazyVim)
-   - `config/agents/AGENTS.md` → `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
-   - `config/skills/agentflow/` → `~/.claude/skills/agentflow/` (the `/agentflow` skill)
+   - `config/wezterm/wezterm.lua` -> `~/.config/wezterm/wezterm.lua`
+   - `config/starship.toml` -> `~/.config/starship.toml`
+   - `config/nvim/` -> `~/.config/nvim/` (LazyVim)
+   - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
+   - `config/skills/agentflow/` -> `~/.claude/skills/agentflow/` (the `/agentflow` skill)
 3. Appends the Starship init line to `~/.zshrc` (only if not already there).
+   On Linux, installs zsh and prints a `chsh` hint if it's not the login shell.
 
 ## Agentic toolchain
 
@@ -169,6 +175,7 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
 ├── setup/
+│   ├── packages-linux.sh   # Linux package installs (called by install.sh)
 │   ├── skills.sh           # installs agent skills (axi [reference], lavish)
 │   └── tools.sh            # installs CLI binaries (no-mistakes, treehouse, gnhf, AXI CLIs) + clones firstmate
 ├── docs/
@@ -182,6 +189,7 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 - [x] Agentic toolchain (OpenSuperWhisper · AXI · lavish · no-mistakes · gnhf · treehouse · firstmate)
 - [ ] Desktop wallpaper (lakeside pagoda at sunset — see `assets/`)
 - [x] Neovim (LazyVim, rose-pine-moon)
+- [x] Cross-platform install (macOS + Linux: apt/dnf/pacman)
 - [ ] Security-lab tooling (wrap recon/scan CLIs as AXI tools)
 
 ## Credits
