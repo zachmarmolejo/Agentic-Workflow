@@ -49,12 +49,12 @@ overwrite to `<file>.bak.<timestamp>`.
 
 Beyond the terminal, this repo installs Kun Chen's agentic toolchain — seven
 tools that compose into one workflow but each run standalone. Installed via the
-`Brewfile`, `setup/skills.sh` (Claude Code skills), and `setup/tools.sh` (CLI
-binaries + the firstmate clone).
+`Brewfile` (macOS), `setup/skills.sh` (Claude Code skills), and `setup/tools.sh`
+(CLI binaries + the firstmate clone).
 
 | # | Tool | What it does | Run it |
 |---|------|--------------|--------|
-| 1 | OpenSuperWhisper | Push-to-talk dictation in any text field | menu bar |
+| 1 | OpenSuperWhisper | Push-to-talk dictation in any text field (macOS-only) | menu bar |
 | 2 | [AXI](https://axi.md) | Principles for agent-ergonomic CLIs (reference skill) | `/axi` |
 | 3 | lavish | Open agent HTML artifacts for click-to-annotate feedback | `/lavish` · `lavish-axi` |
 | 4 | no-mistakes | AI gate: push → review/test/lint/docs → clean PR | `git push no-mistakes` |
@@ -160,7 +160,8 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 ```
 .
 ├── install.sh              # one-command bootstrap
-├── Brewfile                # declarative dependency list (brew bundle)
+├── Brewfile                # declarative dependency list (brew bundle, macOS)
+├── AGENTS.md               # project agent memory (CLAUDE.md symlinks to it)
 ├── config/
 │   ├── wezterm/
 │   │   └── wezterm.lua     # terminal appearance + behavior
@@ -179,6 +180,7 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 │   ├── skills.sh           # installs agent skills (axi [reference], lavish)
 │   └── tools.sh            # installs CLI binaries (no-mistakes, treehouse, gnhf, AXI CLIs) + clones firstmate
 ├── docs/
+│   ├── nvim.md             # Neovim cheat sheet
 │   └── tools.md            # how to run each agentic tool in isolation
 └── assets/                 # wallpaper / screenshots
 ```
