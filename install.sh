@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Bootstrap a machine into this setup:
-#   1. installs Homebrew (if missing) + the packages in Brewfile
+#   1. installs packages (Homebrew on macOS, native package manager on Linux)
 #   2. symlinks the configs in this repo into ~/.config (backing up anything there)
 #   3. wires the shell prompt into ~/.zshrc
 #
@@ -13,23 +13,37 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TS="$(date +%Y%m%d-%H%M%S)"
+OS="$(uname -s)"
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$1"; }
 ok()   { printf '\033[1;32m  ✓\033[0m %s\n' "$1"; }
 warn() { printf '\033[1;33m  !\033[0m %s\n' "$1"; }
 
-# --- 1. Homebrew + packages ---------------------------------------------------
-if ! command -v brew >/dev/null 2>&1; then
-  info "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-# make brew available in this shell (Apple Silicon, then Intel)
-[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-[ -x /usr/local/bin/brew ]    && eval "$(/usr/local/bin/brew shellenv)"
+# --- 1. Packages --------------------------------------------------------------
+case "$OS" in
+  Darwin)
+    if ! command -v brew >/dev/null 2>&1; then
+      info "Installing Homebrew..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    # make brew available in this shell (Apple Silicon, then Intel)
+    [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+    [ -x /usr/local/bin/brew ]    && eval "$(/usr/local/bin/brew shellenv)"
 
-info "Installing packages from Brewfile..."
-brew bundle --file="$REPO_DIR/Brewfile"
-ok "packages ready"
+    info "Installing packages from Brewfile..."
+    brew bundle --file="$REPO_DIR/Brewfile"
+    ok "packages ready"
+    ;;
+  Linux)
+    info "Installing Linux packages..."
+    bash "$REPO_DIR/setup/packages-linux.sh"
+    ok "packages ready"
+    ;;
+  *)
+    echo "Unsupported OS: $OS (only macOS and Linux are supported)." >&2
+    exit 1
+    ;;
+esac
 
 # --- 2. Symlink config files --------------------------------------------------
 link_file() {
@@ -50,12 +64,12 @@ link_file "$REPO_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.
 link_file "$REPO_DIR/config/starship.toml"       "$HOME/.config/starship.toml"
 link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
-# Global agent instructions — one file shared by Claude Code, Codex, and AGENTS.md
+# Global agent instructions - one file shared by Claude Code, Codex, and AGENTS.md
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.claude/CLAUDE.md"
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.codex/AGENTS.md"
 
-# agentflow skill — captures this whole setup; loads on demand in Claude Code
+# agentflow skill - captures this whole setup; loads on demand in Claude Code
 link_file "$REPO_DIR/config/skills/agentflow"    "$HOME/.claude/skills/agentflow"
 
 # --- 3. Shell init ------------------------------------------------------------
@@ -73,13 +87,21 @@ else
   ok "added starship init to ~/.zshrc"
 fi
 
+if [ "$OS" = "Linux" ]; then
+  LOGIN_SHELL="$(getent passwd "$(whoami)" 2>/dev/null | cut -d: -f7 || true)"
+  if [ -n "$LOGIN_SHELL" ] && [ "$LOGIN_SHELL" != "$(command -v zsh 2>/dev/null || true)" ]; then
+    warn "your login shell is $LOGIN_SHELL, not zsh"
+    warn "run: chsh -s \$(which zsh)"
+  fi
+fi
+
 # --- 4. Agent skills ----------------------------------------------------------
 if command -v npx >/dev/null 2>&1; then
   info "Installing agent skills..."
   bash "$REPO_DIR/setup/skills.sh"
   ok "agent skills installed"
 else
-  warn "npx not found — skipping agent skills (install Node, then run setup/skills.sh)"
+  warn "npx not found - skipping agent skills (install Node, then run setup/skills.sh)"
 fi
 
 # --- 5. CLI tools (curl-installed binaries) -----------------------------------
@@ -88,4 +110,8 @@ bash "$REPO_DIR/setup/tools.sh"
 ok "CLI tools installed"
 
 echo
-info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
+if [ "$OS" = "Darwin" ]; then
+  info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
+else
+  info "Done. Open a new terminal (or run: source ~/.zshrc)."
+fi
