@@ -36,8 +36,15 @@ case "$OS" in
     ;;
   Linux)
     info "Installing Linux packages..."
-    bash "$REPO_DIR/setup/packages-linux.sh"
-    ok "packages ready"
+    PKG_RC=0
+    bash "$REPO_DIR/setup/packages-linux.sh" || PKG_RC=$?
+    if [ "$PKG_RC" -eq 0 ]; then
+      ok "packages ready"
+    elif [ "$PKG_RC" -eq 3 ]; then
+      warn "packages skipped (no supported package manager) - continuing with symlinks and shell setup"
+    else
+      exit "$PKG_RC"
+    fi
     ;;
   *)
     echo "Unsupported OS: $OS (only macOS and Linux are supported)." >&2

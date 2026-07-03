@@ -35,8 +35,7 @@ fi
 if [ -z "$PKG" ]; then
   warn "no supported package manager found (need apt-get, dnf, or pacman)"
   warn "install these packages manually: zsh neovim (>= 0.10) curl git fontconfig"
-  warn "then re-run install.sh to continue with symlinks and shell setup"
-  exit 1
+  exit 3
 fi
 
 pkg_install() {
@@ -73,7 +72,8 @@ install_neovim_from_tarball() {
   $SUDO mv "$tmp"/nvim-linux-* /opt/nvim
   rm -rf "$tmp"
   $SUDO ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
-  ok "neovim $(nvim --version | head -1)"
+  hash -r
+  ok "neovim $(/opt/nvim/bin/nvim --version | head -1)"
 }
 
 neovim_is_new_enough() {
@@ -87,16 +87,8 @@ neovim_is_new_enough() {
 
 info "Installing neovim..."
 case "$PKG" in
-  apt)
+  apt|dnf)
     pkg_install neovim || true
-    if ! neovim_is_new_enough; then
-      install_neovim_from_tarball
-    else
-      ok "neovim $(nvim --version | head -1)"
-    fi
-    ;;
-  dnf)
-    pkg_install neovim
     if ! neovim_is_new_enough; then
       install_neovim_from_tarball
     else
@@ -114,40 +106,38 @@ info "Installing starship..."
 if command -v starship >/dev/null 2>&1; then
   ok "starship already installed"
 else
-  curl -sS https://starship.rs/install.sh | sh -s -- --yes
+  curl -fsSL https://starship.rs/install.sh | sh -s -- --yes
   ok "starship installed"
 fi
 
 # --- wezterm ------------------------------------------------------------------
 install_wezterm() {
   info "Installing wezterm..."
+  if command -v wezterm >/dev/null 2>&1; then
+    ok "wezterm already installed"
+    return 0
+  fi
   case "$PKG" in
     apt)
-      if ! command -v wezterm >/dev/null 2>&1; then
-        curl -fsSL https://apt.fury.io/wez/gpg.key | $SUDO gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg
-        echo "deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *" \
-          | $SUDO tee /etc/apt/sources.list.d/wezterm.list >/dev/null
-        $SUDO apt-get update -y
-        pkg_install wezterm
-      fi
-      ok "wezterm"
+      curl -fsSL https://apt.fury.io/wez/gpg.key | $SUDO gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg || return 1
+      echo "deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *" \
+        | $SUDO tee /etc/apt/sources.list.d/wezterm.list >/dev/null || return 1
+      $SUDO apt-get update -y || return 1
+      pkg_install wezterm || return 1
       ;;
     dnf)
-      if ! command -v wezterm >/dev/null 2>&1; then
-        $SUDO dnf copr enable -y wezfurlong/wezterm-nightly
-        pkg_install wezterm
-      fi
-      ok "wezterm"
+      $SUDO dnf copr enable -y wezfurlong/wezterm-nightly || return 1
+      pkg_install wezterm || return 1
       ;;
     pacman)
-      pkg_install wezterm
-      ok "wezterm"
+      pkg_install wezterm || return 1
       ;;
   esac
+  ok "wezterm"
 }
 
 # wezterm needs a display server; skip gracefully in headless/container environments
-if [ -n "${DISPLAY:-}" ] || [ -n "${WAYLAND_DISPLAY:-}" ] || [ -n "${XDG_SESSION_TYPE:-}" ]; then
+if [ -n "${DISPLAY:-}" ] || [ -n "${WAYLAND_DISPLAY:-}" ] || { [ -n "${XDG_SESSION_TYPE:-}" ] && [ "${XDG_SESSION_TYPE:-}" != "tty" ]; }; then
   install_wezterm || warn "wezterm install failed - install manually from https://wezfurlong.org/wezterm/install/linux.html"
 else
   warn "no display detected (headless/container) - skipping wezterm"
