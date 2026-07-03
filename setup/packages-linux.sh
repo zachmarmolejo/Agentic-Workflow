@@ -51,7 +51,7 @@ info "Installing core packages via $PKG..."
 
 case "$PKG" in
   apt)    $SUDO apt-get update -y; pkg_install zsh curl git unzip fontconfig gnupg ;;
-  dnf)    pkg_install zsh curl git unzip fontconfig ;;
+  dnf)    pkg_install zsh curl git unzip fontconfig procps-ng ;;
   pacman) $SUDO pacman -Syu --noconfirm; pkg_install zsh curl git unzip fontconfig ;;
 esac
 ok "core packages"
