@@ -79,7 +79,14 @@ link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.codex/AGENTS.md"
 # agentflow skill - captures this whole setup; loads on demand in Claude Code
 link_file "$REPO_DIR/config/skills/agentflow"    "$HOME/.claude/skills/agentflow"
 
-# --- 3. Shell init ------------------------------------------------------------
+# --- 3. Neovim / LazyVim ------------------------------------------------------
+if command -v nvim >/dev/null 2>&1; then
+  bash "$REPO_DIR/setup/nvim.sh"
+else
+  warn "nvim not found - skipping LazyVim bootstrap"
+fi
+
+# --- 4. Shell init ------------------------------------------------------------
 info "Wiring shell prompt..."
 ZSHRC="$HOME/.zshrc"
 touch "$ZSHRC"
@@ -102,7 +109,7 @@ if [ "$OS" = "Linux" ]; then
   fi
 fi
 
-# --- 4. Agent skills ----------------------------------------------------------
+# --- 5. Agent skills ----------------------------------------------------------
 if command -v npx >/dev/null 2>&1; then
   info "Installing agent skills..."
   bash "$REPO_DIR/setup/skills.sh"
@@ -111,7 +118,7 @@ else
   warn "npx not found - skipping agent skills (install Node, then run setup/skills.sh)"
 fi
 
-# --- 5. CLI tools (curl-installed binaries) -----------------------------------
+# --- 6. CLI tools (curl-installed binaries) -----------------------------------
 info "Installing CLI tools..."
 bash "$REPO_DIR/setup/tools.sh"
 ok "CLI tools installed"

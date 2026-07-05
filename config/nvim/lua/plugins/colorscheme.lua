@@ -1,5 +1,5 @@
 -- Match the terminal: rose-pine (moon), with transparency so WezTerm's
--- 0.8 opacity + background blur shows through nvim too.
+-- opacity + background blur shows through normal editing buffers.
 return {
   {
     "rose-pine/neovim",
@@ -10,6 +10,10 @@ return {
       variant = "moon",
       styles = {
         transparency = true,
+      },
+      highlight_groups = {
+        -- Keep LazyVim/Snacks dashboard readable inside translucent WezTerm.
+        SnacksDashboardNormal = { bg = "base" },
       },
     },
   },
