@@ -20,6 +20,11 @@ local rp = {
 
 local is_windows = os.getenv("OS") and os.getenv("OS"):lower():find("windows")
 local is_macos = wezterm.target_triple:lower():find("darwin") ~= nil
+local is_linux = wezterm.target_triple:lower():find("linux") ~= nil
+
+-- Linux has no compositor-level backdrop like Acrylic/macos_window_background_blur,
+-- so the frosted look is approximated with plain opacity.
+local LINUX_OPACITY = 0.95
 
 config.color_scheme = "rose-pine-moon"
 config.hide_tab_bar_if_only_one_tab = true
@@ -82,6 +87,10 @@ if is_macos then
   config.macos_window_background_blur = 50
   config.font_size = 15.0
   config.window_frame.font_size = 13.0
+end
+
+if is_linux then
+  config.window_background_opacity = LINUX_OPACITY
 end
 
 return config
