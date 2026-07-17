@@ -143,6 +143,26 @@ else
   warn "no display detected (headless/container) - skipping wezterm"
 fi
 
+# --- picom (X11 compositor: background blur behind translucent WezTerm) -------
+# WezTerm can't blur its own background on X11, so picom provides the blur.
+# Packaged as "picom" on apt/dnf/pacman. Useless without a display, so gate it
+# the same way as wezterm.
+install_picom() {
+  info "Installing picom (background blur compositor)..."
+  if command -v picom >/dev/null 2>&1; then
+    ok "picom already installed"
+    return 0
+  fi
+  pkg_install picom || return 1
+  ok "picom"
+}
+
+if [ -n "${DISPLAY:-}" ] || [ -n "${WAYLAND_DISPLAY:-}" ] || { [ -n "${XDG_SESSION_TYPE:-}" ] && [ "${XDG_SESSION_TYPE:-}" != "tty" ]; }; then
+  install_picom || warn "picom install failed - WezTerm background blur will be unavailable"
+else
+  warn "no display detected (headless/container) - skipping picom"
+fi
+
 # --- Hack Nerd Font -----------------------------------------------------------
 info "Installing Hack Nerd Font..."
 FONT_DIR="$HOME/.local/share/fonts"

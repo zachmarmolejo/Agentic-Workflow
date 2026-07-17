@@ -79,6 +79,36 @@ link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.codex/AGENTS.md"
 # agentflow skill - captures this whole setup; loads on demand in Claude Code
 link_file "$REPO_DIR/config/skills/agentflow"    "$HOME/.claude/skills/agentflow"
 
+# picom - X11 compositor that blurs the desktop behind translucent WezTerm.
+# Only meaningful on Linux (macOS/Windows blur themselves via WezTerm).
+if [ "$OS" = "Linux" ]; then
+  link_file "$REPO_DIR/config/picom/picom.conf" "$HOME/.config/picom/picom.conf"
+
+  if command -v picom >/dev/null 2>&1; then
+    # autostart picom on login (picom finds ~/.config/picom/picom.conf by default)
+    mkdir -p "$HOME/.config/autostart"
+    cat > "$HOME/.config/autostart/picom.desktop" <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=picom
+Comment=Compositor providing background blur for WezTerm
+Exec=picom
+X-GNOME-Autostart-enabled=true
+NoDisplay=true
+EOF
+    ok "picom autostart configured"
+
+    # xfwm4's built-in compositor fights picom - turn it off on XFCE
+    if command -v xfconf-query >/dev/null 2>&1 && [ "${XDG_CURRENT_DESKTOP:-}" = "XFCE" ]; then
+      xfconf-query -c xfwm4 -p /general/use_compositing -s false 2>/dev/null \
+        && ok "disabled xfwm4 built-in compositor (picom takes over)" \
+        || warn "could not disable xfwm4 compositing - do it in Settings > Window Manager Tweaks > Compositor"
+    fi
+  else
+    warn "picom not installed - WezTerm background blur unavailable (run setup/packages-linux.sh)"
+  fi
+fi
+
 # --- 3. Neovim / LazyVim ------------------------------------------------------
 if command -v nvim >/dev/null 2>&1; then
   bash "$REPO_DIR/setup/nvim.sh"
