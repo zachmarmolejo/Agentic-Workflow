@@ -20,6 +20,7 @@ local rp = {
 
 local is_windows = os.getenv("OS") and os.getenv("OS"):lower():find("windows")
 local is_macos = wezterm.target_triple:lower():find("darwin") ~= nil
+local is_linux = wezterm.target_triple:lower():find("linux") ~= nil
 
 config.color_scheme = "rose-pine-moon"
 config.hide_tab_bar_if_only_one_tab = true
@@ -82,6 +83,13 @@ if is_macos then
   config.macos_window_background_blur = 50
   config.font_size = 15.0
   config.window_frame.font_size = 13.0
+end
+
+if is_linux then
+  -- translucency here depends on a running compositor (picom on X11, or a
+  -- Wayland compositor) honoring the request; WezTerm only asks for it
+  config.window_background_opacity = 0.8
+  config.window_frame.font_size = 11.0
 end
 
 return config
