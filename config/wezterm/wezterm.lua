@@ -86,9 +86,11 @@ if is_macos then
 end
 
 if is_linux then
-  -- translucency here depends on a running compositor (picom on X11, or a
-  -- Wayland compositor) honoring the request; WezTerm only asks for it
-  config.window_background_opacity = 0.8
+  -- slightly translucent; picom (see config/picom/picom.conf) blurs the
+  -- desktop behind so it reads as a soft wash, not readable content.
+  -- WezTerm can't blur its own background on X11 - it only sets opacity and
+  -- relies on the compositor for the blur.
+  config.window_background_opacity = 0.85
   config.window_frame.font_size = 11.0
 end
 
