@@ -69,6 +69,7 @@ link_file() {
 info "Linking dotfiles..."
 link_file "$REPO_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua"
 link_file "$REPO_DIR/config/starship.toml"       "$HOME/.config/starship.toml"
+link_file "$REPO_DIR/config/tmux/tmux.conf"      "$HOME/.tmux.conf"
 link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
 # Global agent instructions - one file shared by Claude Code, Codex, and AGENTS.md

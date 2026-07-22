@@ -50,9 +50,9 @@ pkg_install() {
 info "Installing core packages via $PKG..."
 
 case "$PKG" in
-  apt)    $SUDO apt-get update -y; pkg_install zsh curl git unzip fontconfig gnupg ;;
-  dnf)    pkg_install zsh curl git unzip fontconfig procps-ng ;;
-  pacman) $SUDO pacman -Syu --noconfirm; pkg_install zsh curl git unzip fontconfig ;;
+  apt)    $SUDO apt-get update -y; pkg_install zsh curl git unzip fontconfig gnupg tmux ;;
+  dnf)    pkg_install zsh curl git unzip fontconfig procps-ng tmux ;;
+  pacman) $SUDO pacman -Syu --noconfirm; pkg_install zsh curl git unzip fontconfig tmux ;;
 esac
 ok "core packages"
 

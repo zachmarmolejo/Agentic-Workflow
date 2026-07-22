@@ -2,11 +2,13 @@
 # Source: https://github.com/kunchenguid/dotfiles-mac-nix (nix/user.nix)
 
 command_timeout = 1000
-add_newline = false
-format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$character"
+add_newline = true
+format = "$directory$git_branch$git_state$git_status$cmd_duration$line_break$character"
 
 [directory]
-style = "blue"
+style = "bold blue"
+truncation_length = 3
+truncate_to_repo = false
 
 [character]
 success_symbol = "[❯](purple)"

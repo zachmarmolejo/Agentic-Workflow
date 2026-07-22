@@ -24,6 +24,81 @@ if command -v npm >/dev/null 2>&1; then
   for t in gh-axi chrome-devtools-axi lavish-axi tasks-axi; do "$t" setup hooks || true; done
 fi
 
+# --- readability tools (bat, eza, fzf) ---
+# bat: syntax-highlighted cat replacement
+# eza: modern ls replacement with colors and git status
+# fzf: fuzzy finder (Ctrl+T files, Ctrl+R history)
+install_readability_tools() {
+  local arch os
+  arch="$(uname -m)"
+  os="$(uname -s)"
+
+  # normalize arch
+  case "$arch" in
+    x86_64|amd64) arch="x86_64" ;;
+    aarch64|arm64) arch="aarch64" ;;
+  esac
+
+  # --- bat ---
+  if command -v bat >/dev/null 2>&1 || command -v batcat >/dev/null 2>&1; then
+    echo "    bat already installed"
+  else
+    local bat_ver
+    bat_ver="$(curl -sL https://api.github.com/repos/sharkdp/bat/releases/latest | grep -oP '"tag_name":\s*"v\K[^"]+')"
+    echo "==> bat v${bat_ver}"
+    local tmp
+    tmp="$(mktemp -d)"
+    case "$os" in
+      Darwin) brew install bat ;;
+      Linux)
+        curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${bat_ver}/bat-v${bat_ver}-${arch}-unknown-linux-gnu.tar.gz" -o "$tmp/bat.tar.gz"
+        tar xzf "$tmp/bat.tar.gz" -C "$tmp"
+        cp "$tmp/bat-v${bat_ver}-${arch}-unknown-linux-gnu/bat" "$HOME/.local/bin/bat"
+        chmod +x "$HOME/.local/bin/bat"
+        ;;
+    esac
+    rm -rf "$tmp"
+  fi
+
+  # --- eza ---
+  if command -v eza >/dev/null 2>&1; then
+    echo "    eza already installed"
+  else
+    local eza_ver
+    eza_ver="$(curl -sL https://api.github.com/repos/eza-community/eza/releases/latest | grep -oP '"tag_name":\s*"v\K[^"]+')"
+    echo "==> eza v${eza_ver}"
+    local tmp
+    tmp="$(mktemp -d)"
+    case "$os" in
+      Darwin) brew install eza ;;
+      Linux)
+        curl -fsSL "https://github.com/eza-community/eza/releases/download/v${eza_ver}/eza_${arch}-unknown-linux-gnu.tar.gz" -o "$tmp/eza.tar.gz"
+        tar xzf "$tmp/eza.tar.gz" -C "$tmp"
+        cp "$tmp/eza" "$HOME/.local/bin/eza"
+        chmod +x "$HOME/.local/bin/eza"
+        ;;
+    esac
+    rm -rf "$tmp"
+  fi
+
+  # --- fzf ---
+  if command -v fzf >/dev/null 2>&1; then
+    echo "    fzf already installed"
+  else
+    echo "==> fzf"
+    if [ ! -d "$HOME/.fzf" ]; then
+      git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+    fi
+    yes | "$HOME/.fzf/install" --no-update-rc --bin >/dev/null 2>&1 || true
+    # ensure fzf is on PATH
+    if [ -f "$HOME/.fzf/bin/fzf" ] && [ ! -f "$HOME/.local/bin/fzf" ]; then
+      ln -s "$HOME/.fzf/bin/fzf" "$HOME/.local/bin/fzf"
+    fi
+  fi
+}
+
+install_readability_tools
+
 # --- firstmate: clone-based orchestrator (talk to one agent, ship with a crew) ---
 # No install — you run your agent inside the clone: `cd ~/firstmate && claude`.
 if [ -d "$HOME/firstmate/.git" ]; then

@@ -26,23 +26,29 @@ overwrite to `<file>.bak.<timestamp>`.
 | Area | Tool | What it gives you |
 |------|------|-------------------|
 | Terminal | [WezTerm](https://wezfurlong.org/wezterm/) | `rose-pine-moon` theme, Hack Nerd Font, 80% opacity + macOS background blur, rose-tinted tab bar that hides on a single tab |
-| Prompt | [Starship](https://starship.rs/) | blue dir · gray git branch · yellow command-duration · purple `❯` |
+| Multiplexer | [tmux](https://github.com/tmux/tmux) | Catppuccin Mocha status bar, 50k scrollback, mouse support, right-click paste, intuitive pane splits |
+| Prompt | [Starship](https://starship.rs/) | bold blue dir · gray git branch · yellow command-duration · purple `❯` |
 | Font | Hack Nerd Font | glyphs/icons the prompt relies on |
 | Editor | [Neovim](https://neovim.io/) + [LazyVim](https://lazyvim.org/) | rose-pine-moon (transparent to match), LSP · completion · telescope · treesitter |
+| Readability | [bat](https://github.com/sharkdp/bat) | syntax-highlighted `cat` with line numbers, colored man pages |
+| Readability | [eza](https://github.com/eza-community/eza) | modern `ls` with colors, git status, directory-first sorting |
+| Readability | [fzf](https://github.com/junegunn/fzf) | fuzzy finder — Ctrl+T files, Ctrl+R history, Catppuccin themed |
 
 ## What `install.sh` does
 
 1. Installs packages:
-   - **macOS**: Homebrew + everything in `Brewfile`
+   - **macOS**: Homebrew + everything in `Brewfile` (includes tmux, bat, eza, fzf)
    - **Linux**: native package manager (apt/dnf/pacman) + official installers for starship, neovim (tarball fallback when distro version < 0.10), Hack Nerd Font, wezterm
+   - bat, eza, fzf installed via `setup/tools.sh` (pre-built binaries on Linux, brew on macOS)
    - OpenSuperWhisper is macOS-only and skipped on Linux with a note
 2. Symlinks the configs into place (so edits in this repo are live):
    - `config/wezterm/wezterm.lua` -> `~/.config/wezterm/wezterm.lua`
    - `config/starship.toml` -> `~/.config/starship.toml`
+   - `config/tmux/tmux.conf` -> `~/.tmux.conf`
    - `config/nvim/` -> `~/.config/nvim/` (LazyVim)
    - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
    - `config/skills/agentflow/` -> `~/.claude/skills/agentflow/` (the `/agentflow` skill)
-3. Appends the Starship init line to `~/.zshrc` (only if not already there).
+3. Appends the Starship init + readability aliases to `~/.zshrc` (only if not already there).
    On Linux, installs zsh and prints a `chsh` hint if it's not the login shell.
 
 ## Agentic toolchain
@@ -165,6 +171,8 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 ├── config/
 │   ├── wezterm/
 │   │   └── wezterm.lua     # terminal appearance + behavior
+│   ├── tmux/
+│   │   └── tmux.conf      # tmux: Catppuccin Mocha, mouse, scrollback, keybinds
 │   ├── nvim/               # LazyVim config (rose-pine-moon, transparent)
 │   ├── agents/
 │   │   └── AGENTS.md       # global agent instructions (Claude/Codex/AGENTS.md)
@@ -188,6 +196,8 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 ## Roadmap
 
 - [x] Terminal stack (WezTerm + Starship, rose-pine-moon)
+- [x] tmux config (Catppuccin Mocha, mouse, scrollback, pane keybinds)
+- [x] Readability tools (bat, eza, fzf)
 - [x] Agentic toolchain (OpenSuperWhisper · AXI · lavish · no-mistakes · gnhf · treehouse · firstmate)
 - [ ] Desktop wallpaper (lakeside pagoda at sunset — see `assets/`)
 - [x] Neovim (LazyVim, rose-pine-moon)

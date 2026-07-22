@@ -4,6 +4,10 @@
 cask "wezterm"             # GPU-accelerated terminal emulator
 cask "font-hack-nerd-font" # patched font with icons/glyphs used by the prompt
 brew "starship"            # the shell prompt
+brew "tmux"                # terminal multiplexer
+brew "bat"                 # syntax-highlighted cat replacement
+brew "eza"                 # modern ls replacement with colors + git status
+brew "fzf"                 # fuzzy finder (Ctrl+T files, Ctrl+R history)
 
 # Dictation
 cask "opensuperwhisper"    # push-to-talk Whisper/Parakeet dictation
