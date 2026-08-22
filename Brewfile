@@ -12,5 +12,8 @@ brew "fzf"                 # fuzzy finder (Ctrl+T files, Ctrl+R history)
 # Dictation
 cask "opensuperwhisper"    # push-to-talk Whisper/Parakeet dictation
 
+# Window management
+cask "hammerspoon"         # keyboard-driven macOS automation and window management
+
 # Editor
 brew "neovim"              # nvim

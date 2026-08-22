@@ -72,6 +72,32 @@ link_file "$REPO_DIR/config/starship.toml"       "$HOME/.config/starship.toml"
 link_file "$REPO_DIR/config/tmux/tmux.conf"      "$HOME/.tmux.conf"
 link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
+if [ "$OS" = "Darwin" ]; then
+  link_file "$REPO_DIR/config/hammerspoon/init.lua" "$HOME/.hammerspoon/init.lua"
+
+  info "Installing PaperWM..."
+  bash "$REPO_DIR/setup/hammerspoon.sh"
+  ok "PaperWM ready"
+
+  defaults write com.apple.dock mru-spaces -bool false
+  defaults write com.apple.spaces spans-displays -bool false
+  defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+  defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 0
+  defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 0
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerHorizSwipeGesture -int 0
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 0
+  # Reserve Command+Option+Space for Hammerspoon instead of Finder's search window.
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 65 '{ enabled = 0; }'
+  killall cfprefsd 2>/dev/null || true
+  killall Dock 2>/dev/null || true
+  killall SystemUIServer 2>/dev/null || true
+  ok "Mission Control configured for PaperWM"
+  warn "grant Hammerspoon access in Privacy & Security > Accessibility on first launch"
+  killall Hammerspoon 2>/dev/null || true
+  open -a Hammerspoon
+fi
+
 # Global agent instructions - one file shared by Claude Code, Codex, and AGENTS.md
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.claude/CLAUDE.md"

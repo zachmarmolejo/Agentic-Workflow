@@ -26,6 +26,7 @@ Runs on macOS (Homebrew + `Brewfile`) and Linux (apt/dnf/pacman via `setup/packa
 ## Layout (repo path -> where it links)
 
 - `config/wezterm/wezterm.lua` -> `~/.config/wezterm/` - WezTerm, rose-pine-moon, 80% opacity + blur.
+- `config/hammerspoon/init.lua` -> `~/.hammerspoon/init.lua` - PaperWM scrolling window management on macOS. Cheat sheet: `docs/window-management.md`.
 - `config/starship.toml` -> `~/.config/` - Starship prompt.
 - `config/nvim/` -> `~/.config/nvim/` - LazyVim, rose-pine-moon, transparent. Cheat sheet: `docs/nvim.md`.
 - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md` - one global instruction file for every agent.
@@ -64,5 +65,6 @@ Full standalone usage lives in `~/Agentic-Workflow/docs/tools.md`. Quick map:
 ## Common tasks
 
 - New machine: clone the repo, run `./install.sh`.
+- Update PaperWM: test an upstream release, then change the pinned commit in `setup/hammerspoon.sh`.
 - Add a package: edit `Brewfile` (macOS) and `setup/packages-linux.sh` (Linux). Add an agent skill: edit `setup/skills.sh`. Add a CLI tool: edit `setup/tools.sh`.
 - Change a config: edit it under `~/Agentic-Workflow/` (symlinked live), then commit and push.
