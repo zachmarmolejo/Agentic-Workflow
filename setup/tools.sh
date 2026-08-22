@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# Install standalone CLI binaries (Kun Chen's agentic toolchain) via their
-# official installers. Binaries land in ~/.local/bin (already on PATH).
+# Install Kun Chen's agentic toolchain via official installers and npm.
 # Safe to re-run.
 #
 set -euo pipefail
 
 TOOLS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$TOOLS_DIR/.." && pwd)"
 
 echo "==> no-mistakes (AI validation gate: push -> review/test/lint/docs -> clean PR)"
 curl -fsSL https://raw.githubusercontent.com/kunchenguid/no-mistakes/main/docs/install.sh | sh
@@ -37,8 +37,8 @@ fi
 # with). It's gitignored in firstmate, so upstream updates never touch it. Only
 # seed when absent, so local edits are never clobbered.
 if [ -d "$HOME/firstmate" ] && [ ! -f "$HOME/firstmate/config/crew-dispatch.json" ] \
-   && [ -f "$TOOLS_DIR/firstmate/crew-dispatch.json" ]; then
+   && [ -f "$REPO_DIR/config/firstmate/crew-dispatch.json" ]; then
   mkdir -p "$HOME/firstmate/config"
-  cp "$TOOLS_DIR/firstmate/crew-dispatch.json" "$HOME/firstmate/config/crew-dispatch.json"
+  cp "$REPO_DIR/config/firstmate/crew-dispatch.json" "$HOME/firstmate/config/crew-dispatch.json"
   echo "    seeded firstmate config/crew-dispatch.json (crew default: claude/opus-4.6)"
 fi

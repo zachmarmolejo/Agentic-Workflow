@@ -5,7 +5,7 @@ For the LazyVim setup in this repo (`config/nvim/`, rose-pine-moon). Leader = `<
 Neovim is **modal** — that's the part that trips people up. Press `<Space>` and
 pause anytime to get the which-key menu, which lists every shortcut.
 
-> Open this file from inside nvim with `:e ~/Agentic-Workflow/docs/nvim.md`.
+> Open this file from inside nvim with `:e ~/Omarchy-Style-MacOS/docs/nvim.md`.
 
 ## Modes
 

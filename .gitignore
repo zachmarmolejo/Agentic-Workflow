@@ -3,3 +3,6 @@
 
 # install.sh backups
 *.bak.*
+
+# Local Lavish review artifacts
+.lavish/

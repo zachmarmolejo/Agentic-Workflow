@@ -4,16 +4,14 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 - Add durable project-specific notes here as they are discovered through real work.
 
-## Cross-platform install
+## macOS install
 
-`install.sh` detects the OS via `uname -s` and branches:
-- **Darwin**: Homebrew + Brewfile (unchanged).
-- **Linux**: `setup/packages-linux.sh` handles apt/dnf/pacman.
-  Neovim >= 0.10 is required for LazyVim; the script falls back to the official tarball when the distro package is too old.
-  Starship uses the official installer script.
-  Hack Nerd Font is fetched into `~/.local/share/fonts`.
-  WezTerm is skipped in headless/container environments.
-  OpenSuperWhisper is macOS-only and skipped on Linux.
+`install.sh` supports macOS only and installs dependencies through Homebrew and the `Brewfile`.
+It symlinks the repository configs into the owner's home directory, installs PaperWM, changes macOS settings, and launches Hammerspoon.
 
 Do NOT run `./install.sh` on the owner's live Mac from a worktree - it rewrites home-directory symlinks.
-Verify the mac path by review only; test the Linux path via Docker containers.
+Validate installer changes with syntax checks and focused command stubs rather than executing the full installer from a worktree.
+
+## WezTerm translucency and blur
+
+`config/wezterm/wezterm.lua` uses WezTerm's native macOS background blur with 80% opacity.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Bootstrap a machine into this setup:
-#   1. installs packages (Homebrew on macOS, native package manager on Linux)
+#   1. installs packages with Homebrew
 #   2. symlinks the configs in this repo into ~/.config (backing up anything there)
 #   3. wires the shell prompt into ~/.zshrc
 #
@@ -13,53 +13,46 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TS="$(date +%Y%m%d-%H%M%S)"
-OS="$(uname -s)"
-
 info() { printf '\033[1;34m==>\033[0m %s\n' "$1"; }
 ok()   { printf '\033[1;32m  ✓\033[0m %s\n' "$1"; }
 warn() { printf '\033[1;33m  !\033[0m %s\n' "$1"; }
 
 # --- 1. Packages --------------------------------------------------------------
-case "$OS" in
-  Darwin)
-    if ! command -v brew >/dev/null 2>&1; then
-      info "Installing Homebrew..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-    # make brew available in this shell (Apple Silicon, then Intel)
-    [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-    [ -x /usr/local/bin/brew ]    && eval "$(/usr/local/bin/brew shellenv)"
+if [ "$(uname -s)" != "Darwin" ]; then
+  echo "Omarchy-Style-MacOS requires macOS." >&2
+  exit 1
+fi
 
-    info "Installing packages from Brewfile..."
-    brew bundle --file="$REPO_DIR/Brewfile"
-    ok "packages ready"
-    ;;
-  Linux)
-    info "Installing Linux packages..."
-    PKG_RC=0
-    bash "$REPO_DIR/setup/packages-linux.sh" || PKG_RC=$?
-    if [ "$PKG_RC" -eq 0 ]; then
-      ok "packages ready"
-    elif [ "$PKG_RC" -eq 3 ]; then
-      warn "packages skipped (no supported package manager) - continuing with symlinks and shell setup"
-    else
-      exit "$PKG_RC"
-    fi
-    ;;
-  *)
-    echo "Unsupported OS: $OS (only macOS and Linux are supported)." >&2
-    exit 1
-    ;;
-esac
+if ! command -v brew >/dev/null 2>&1; then
+  info "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+# Prefer the native Homebrew installation for this Mac's architecture.
+if [ "$(uname -m)" = "arm64" ] && [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+elif [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+info "Installing packages from Brewfile..."
+brew bundle --file="$REPO_DIR/Brewfile"
+ok "packages ready"
 
 # --- 2. Symlink config files --------------------------------------------------
 link_file() {
   local src="$1" dest="$2"
   mkdir -p "$(dirname "$dest")"
   if [ -L "$dest" ]; then
-    rm "$dest"                       # replace an old symlink
+    if [ "$(/usr/bin/stat -f '%Y' "$dest")" = "$src" ]; then
+      ok "already linked $dest"
+      return
+    fi
+    mv "$dest" "$dest.bak.$TS"
+    warn "backed up $dest -> $dest.bak.$TS"
   elif [ -e "$dest" ]; then
-    mv "$dest" "$dest.bak.$TS"       # back up a real file
+    mv "$dest" "$dest.bak.$TS"
     warn "backed up $dest -> $dest.bak.$TS"
   fi
   ln -s "$src" "$dest"
@@ -69,7 +62,32 @@ link_file() {
 info "Linking dotfiles..."
 link_file "$REPO_DIR/config/wezterm/wezterm.lua" "$HOME/.config/wezterm/wezterm.lua"
 link_file "$REPO_DIR/config/starship.toml"       "$HOME/.config/starship.toml"
+link_file "$REPO_DIR/config/tmux/tmux.conf"      "$HOME/.tmux.conf"
 link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
+
+link_file "$REPO_DIR/config/hammerspoon/init.lua" "$HOME/.hammerspoon/init.lua"
+
+info "Installing PaperWM..."
+bash "$REPO_DIR/setup/hammerspoon.sh"
+ok "PaperWM ready"
+
+defaults write com.apple.dock mru-spaces -bool false
+defaults write com.apple.spaces spans-displays -bool false
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerHorizSwipeGesture -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 0
+# Reserve Command+Option+Space for Hammerspoon instead of Finder's search window.
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 65 '{ enabled = 0; }'
+killall cfprefsd 2>/dev/null || true
+killall Dock 2>/dev/null || true
+killall SystemUIServer 2>/dev/null || true
+ok "Mission Control configured for PaperWM"
+warn "grant Hammerspoon access in Privacy & Security > Accessibility on first launch"
+killall Hammerspoon 2>/dev/null || true
+open -a Hammerspoon
 
 # Global agent instructions - one file shared by Claude Code, Codex, and AGENTS.md
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
@@ -90,24 +108,55 @@ fi
 info "Wiring shell prompt..."
 ZSHRC="$HOME/.zshrc"
 touch "$ZSHRC"
-if grep -q 'starship init zsh' "$ZSHRC"; then
-  ok "starship init already present in ~/.zshrc"
-else
-  {
-    printf '\n# >>> Agentic-Workflow >>>\n'
-    cat "$REPO_DIR/shell/zshrc.snippet"
-    printf '# <<< Agentic-Workflow <<<\n'
-  } >> "$ZSHRC"
-  ok "added starship init to ~/.zshrc"
+ZSHRC_TMP="$(mktemp "${TMPDIR:-/tmp}/omarchy-zshrc.XXXXXX")"
+IN_MANAGED_BLOCK=false
+FOUND_MANAGED_BLOCK=false
+
+write_shell_block() {
+  printf '# >>> Omarchy-Style-MacOS >>>\n'
+  cat "$REPO_DIR/shell/zshrc.snippet"
+  printf '# <<< Omarchy-Style-MacOS <<<\n'
+}
+
+while IFS= read -r line || [ -n "$line" ]; do
+  case "$line" in
+    '# >>> Agentic-Workflow >>>'|'# >>> Omarchy-Style-MacOS >>>')
+      if [ "$FOUND_MANAGED_BLOCK" = false ]; then
+        write_shell_block >> "$ZSHRC_TMP"
+        FOUND_MANAGED_BLOCK=true
+      fi
+      IN_MANAGED_BLOCK=true
+      ;;
+    '# <<< Agentic-Workflow <<<'|'# <<< Omarchy-Style-MacOS <<<')
+      IN_MANAGED_BLOCK=false
+      ;;
+    *)
+      if [ "$IN_MANAGED_BLOCK" = false ]; then
+        printf '%s\n' "$line" >> "$ZSHRC_TMP"
+      fi
+      ;;
+  esac
+done < "$ZSHRC"
+
+if [ "$FOUND_MANAGED_BLOCK" = false ]; then
+  if [ -s "$ZSHRC_TMP" ]; then
+    printf '\n' >> "$ZSHRC_TMP"
+  fi
+  write_shell_block >> "$ZSHRC_TMP"
+fi
+if ! grep -Eq '^[[:space:]]*([^#[:space:]][^#]*&&[[:space:]]*)?eval[[:space:]]+.*starship init zsh' "$ZSHRC_TMP"; then
+  printf '\n# Starship prompt\neval "$(starship init zsh)"\n' >> "$ZSHRC_TMP"
 fi
 
-if [ "$OS" = "Linux" ]; then
-  LOGIN_SHELL="$(getent passwd "$(whoami)" 2>/dev/null | cut -d: -f7 || true)"
-  if [ -n "$LOGIN_SHELL" ] && [ "$LOGIN_SHELL" != "$(command -v zsh 2>/dev/null || true)" ]; then
-    warn "your login shell is $LOGIN_SHELL, not zsh"
-    warn "run: chsh -s \$(which zsh)"
-  fi
+if cmp -s "$ZSHRC" "$ZSHRC_TMP"; then
+  ok "shell setup already present in ~/.zshrc"
+else
+  cp "$ZSHRC" "$ZSHRC.bak.$TS"
+  cat "$ZSHRC_TMP" > "$ZSHRC"
+  warn "backed up $ZSHRC -> $ZSHRC.bak.$TS"
+  ok "updated shell setup in ~/.zshrc"
 fi
+rm "$ZSHRC_TMP"
 
 # --- 5. Agent skills ----------------------------------------------------------
 if command -v npx >/dev/null 2>&1; then
@@ -124,8 +173,4 @@ bash "$REPO_DIR/setup/tools.sh"
 ok "CLI tools installed"
 
 echo
-if [ "$OS" = "Darwin" ]; then
-  info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
-else
-  info "Done. Open a new terminal (or run: source ~/.zshrc)."
-fi
+info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
