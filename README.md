@@ -1,30 +1,30 @@
-# Agentic-Workflow
+# Omarchy-Style-MacOS
 
-My tailored development + agentic-workflow setup, in code - so a fresh machine is one
-command away from feeling like home.
+My tailored macOS development and agentic-workflow setup, in code.
+A fresh Mac is one command away from feeling like home.
 
-It covers the terminal stack (WezTerm + Starship, `rose-pine-moon` theme) and a
-seven-tool agentic toolchain, and will grow to cover the rest of my workflow.
+It covers an Omarchy-inspired PaperWM window manager, the terminal stack (WezTerm + Starship, `rose-pine-moon` theme), and a seven-tool agentic toolchain.
 
-Runs on **macOS** and **Linux** (Debian/Ubuntu, Fedora/RHEL, Arch).
+Built exclusively for **macOS**.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/zachmarmolejo/Agentic-Workflow.git
-cd Agentic-Workflow
+git clone https://github.com/zachmarmolejo/Omarchy-Style-MacOS.git
+cd Omarchy-Style-MacOS
 ./install.sh
 ```
 
 Then open a new WezTerm window (or `source ~/.zshrc`).
 
-`install.sh` is safe to re-run — it's idempotent and backs up any file it would
-overwrite to `<file>.bak.<timestamp>`.
+`install.sh` is safe to re-run — it's idempotent and backs up any file or symlink it would overwrite to `<file>.bak.<timestamp>`.
+Homebrew, npm tools, no-mistakes, and treehouse use their current upstream releases; PaperWM is pinned to a tested commit.
 
 ## What's inside
 
 | Area | Tool | What it gives you |
 |------|------|-------------------|
+| Window management | [Hammerspoon](https://www.hammerspoon.org/) + [PaperWM](https://github.com/mogenson/PaperWM.spoon) | Horizontally scrolling tiling, four managed Spaces, hover focus, and searchable keybindings |
 | Terminal | [WezTerm](https://wezfurlong.org/wezterm/) | `rose-pine-moon` theme, Hack Nerd Font, 80% opacity + macOS background blur, rose-tinted tab bar that hides on a single tab |
 | Multiplexer | [tmux](https://github.com/tmux/tmux) | Catppuccin Mocha status bar, 50k scrollback, mouse support, right-click paste, intuitive pane splits |
 | Prompt | [Starship](https://starship.rs/) | bold blue dir · gray git branch · yellow command-duration · purple `❯` |
@@ -34,33 +34,33 @@ overwrite to `<file>.bak.<timestamp>`.
 | Readability | [eza](https://github.com/eza-community/eza) | modern `ls` with colors, git status, directory-first sorting |
 | Readability | [fzf](https://github.com/junegunn/fzf) | fuzzy finder — Ctrl+T files, Ctrl+R history, Catppuccin themed |
 
+See [docs/window-management.md](docs/window-management.md) for PaperWM behavior and keybindings.
+
 ## What `install.sh` does
 
-1. Installs packages:
-   - **macOS**: Homebrew + everything in `Brewfile` (includes tmux, bat, eza, fzf)
-   - **Linux**: native package manager (apt/dnf/pacman) + official installers for starship, neovim (tarball fallback when distro version < 0.10), Hack Nerd Font, wezterm
-   - bat, eza, fzf installed via `setup/tools.sh` (pre-built binaries on Linux, brew on macOS)
-   - OpenSuperWhisper is macOS-only and skipped on Linux with a note
+1. Installs Homebrew and everything in `Brewfile`, including WezTerm, Hammerspoon, Neovim, Node, tmux, bat, eza, fzf, and OpenSuperWhisper.
 2. Symlinks the configs into place (so edits in this repo are live):
    - `config/wezterm/wezterm.lua` -> `~/.config/wezterm/wezterm.lua`
    - `config/starship.toml` -> `~/.config/starship.toml`
    - `config/tmux/tmux.conf` -> `~/.tmux.conf`
    - `config/nvim/` -> `~/.config/nvim/` (LazyVim)
+   - `config/hammerspoon/init.lua` -> `~/.hammerspoon/init.lua` (PaperWM)
    - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
    - `config/skills/agentflow/` -> `~/.claude/skills/agentflow/` (the `/agentflow` skill)
-3. Appends the Starship init + readability aliases to `~/.zshrc` (only if not already there).
-   On Linux, installs zsh and prints a `chsh` hint if it's not the login shell.
+3. Installs PaperWM and configures macOS Spaces, trackpad gestures, and the Hammerspoon keybinding chooser.
+4. Maintains a marked readability block in `~/.zshrc` and ensures Starship is initialized without duplicating an existing setup.
+5. Installs the agent skills and CLI toolchain.
 
 ## Agentic toolchain
 
 Beyond the terminal, this repo installs Kun Chen's agentic toolchain — seven
 tools that compose into one workflow but each run standalone. Installed via the
-`Brewfile` (macOS), `setup/skills.sh` (Claude Code skills), and `setup/tools.sh`
+`Brewfile`, `setup/skills.sh` (Claude Code skills), and `setup/tools.sh`
 (CLI binaries + the firstmate clone).
 
 | # | Tool | What it does | Run it |
 |---|------|--------------|--------|
-| 1 | OpenSuperWhisper | Push-to-talk dictation in any text field (macOS-only) | menu bar |
+| 1 | OpenSuperWhisper | Push-to-talk dictation in any text field | menu bar |
 | 2 | [AXI](https://axi.md) | Principles for agent-ergonomic CLIs (reference skill) | `/axi` |
 | 3 | lavish | Open agent HTML artifacts for click-to-annotate feedback | `/lavish` · `lavish-axi` |
 | 4 | no-mistakes | AI gate: push → review/test/lint/docs → clean PR | `git push no-mistakes` |
@@ -95,7 +95,7 @@ optional on-demand companions: `~/OPINIONS.md` (viewpoints) and `~/VOICE.md`
 LazyVim, leader = `<Space>`. Neovim is **modal** — that's the part that trips
 people up. Press `<Space>` and pause anytime to get the which-key menu.
 
-**→ Also at [docs/nvim.md](docs/nvim.md)** — open from inside nvim with `:e ~/Agentic-Workflow/docs/nvim.md`.
+**→ Also at [docs/nvim.md](docs/nvim.md)** — open from inside nvim with `:e ~/Omarchy-Style-MacOS/docs/nvim.md`.
 
 **Modes**
 
@@ -171,6 +171,8 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 ├── config/
 │   ├── wezterm/
 │   │   └── wezterm.lua     # terminal appearance + behavior
+│   ├── hammerspoon/
+│   │   └── init.lua        # PaperWM window management + keybindings
 │   ├── tmux/
 │   │   └── tmux.conf      # tmux: Catppuccin Mocha, mouse, scrollback, keybinds
 │   ├── nvim/               # LazyVim config (rose-pine-moon, transparent)
@@ -184,24 +186,26 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 ├── shell/
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
 ├── setup/
-│   ├── packages-linux.sh   # Linux package installs (called by install.sh)
+│   ├── hammerspoon.sh      # installs the pinned PaperWM release
 │   ├── skills.sh           # installs agent skills (axi [reference], lavish)
 │   └── tools.sh            # installs CLI binaries (no-mistakes, treehouse, gnhf, AXI CLIs) + clones firstmate
 ├── docs/
 │   ├── nvim.md             # Neovim cheat sheet
-│   └── tools.md            # how to run each agentic tool in isolation
+│   ├── tools.md            # how to run each agentic tool in isolation
+│   └── window-management.md # PaperWM behavior and keybindings
 └── assets/                 # wallpaper / screenshots
 ```
 
 ## Roadmap
 
 - [x] Terminal stack (WezTerm + Starship, rose-pine-moon)
+- [x] PaperWM scrolling window management through Hammerspoon
 - [x] tmux config (Catppuccin Mocha, mouse, scrollback, pane keybinds)
 - [x] Readability tools (bat, eza, fzf)
 - [x] Agentic toolchain (OpenSuperWhisper · AXI · lavish · no-mistakes · gnhf · treehouse · firstmate)
 - [ ] Desktop wallpaper (lakeside pagoda at sunset — see `assets/`)
 - [x] Neovim (LazyVim, rose-pine-moon)
-- [x] Cross-platform install (macOS + Linux: apt/dnf/pacman)
+- [x] Reproducible macOS bootstrap with Homebrew
 - [ ] Security-lab tooling (wrap recon/scan CLIs as AXI tools)
 
 ## Credits

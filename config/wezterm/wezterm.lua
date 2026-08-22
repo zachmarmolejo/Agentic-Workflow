@@ -18,10 +18,6 @@ local rp = {
   iris = "#c4a7e7",
 }
 
-local is_windows = os.getenv("OS") and os.getenv("OS"):lower():find("windows")
-local is_macos = wezterm.target_triple:lower():find("darwin") ~= nil
-local is_linux = wezterm.target_triple:lower():find("linux") ~= nil
-
 config.color_scheme = "rose-pine-moon"
 config.hide_tab_bar_if_only_one_tab = true
 config.max_fps = 120
@@ -72,26 +68,9 @@ config.window_padding = {
   bottom = 8,
 }
 
-if is_windows then
-  config.win32_system_backdrop = "Acrylic"
-  config.window_background_opacity = 0.7
-  config.window_frame.font_size = 10.0
-end
-
-if is_macos then
-  config.window_background_opacity = 0.8
-  config.macos_window_background_blur = 50
-  config.font_size = 15.0
-  config.window_frame.font_size = 13.0
-end
-
-if is_linux then
-  -- slightly translucent; picom (see config/picom/picom.conf) blurs the
-  -- desktop behind so it reads as a soft wash, not readable content.
-  -- WezTerm can't blur its own background on X11 - it only sets opacity and
-  -- relies on the compositor for the blur.
-  config.window_background_opacity = 0.85
-  config.window_frame.font_size = 11.0
-end
+config.window_background_opacity = 0.8
+config.macos_window_background_blur = 50
+config.font_size = 15.0
+config.window_frame.font_size = 13.0
 
 return config

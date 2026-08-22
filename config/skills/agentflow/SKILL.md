@@ -1,27 +1,27 @@
 ---
 name: agentflow
 description: >
-  Zach's personal agentic-workflow setup, captured from the Agentic-Workflow repo:
+  Zach's personal agentic-workflow setup, captured from the Omarchy-Style-MacOS repo:
   the terminal stack, Kun Chen's agent toolchain (firstmate, gnhf, treehouse,
   no-mistakes, lavish, axi, OpenSuperWhisper), Neovim, the global agent
   instructions, and the conventions that tie them together. Use when working on,
   extending, reproducing on a new machine, or troubleshooting this setup, any of
-  those tools, the Agentic-Workflow repo, or firstmate crew configuration.
+  those tools, the Omarchy-Style-MacOS repo, or firstmate crew configuration.
 ---
 
 # agentflow
 
 Zach's reproducible dev + agent setup.
-Source of truth: `~/Agentic-Workflow` (https://github.com/zachmarmolejo/Agentic-Workflow).
+Source of truth: `~/Omarchy-Style-MacOS` (https://github.com/zachmarmolejo/Omarchy-Style-MacOS).
 Everything below is symlinked live from that repo, so to change anything you edit the file in the repo, then `git commit && git push`.
 
 ## The golden rule
 
 This setup is reproducible by design.
-Configs live in the repo and are symlinked into place by `~/Agentic-Workflow/install.sh`.
+Configs live in the repo and are symlinked into place by `~/Omarchy-Style-MacOS/install.sh`.
 Editing a repo file changes the live system immediately (it is symlinked); then commit and push.
-A fresh machine is one command: `git clone https://github.com/zachmarmolejo/Agentic-Workflow && cd Agentic-Workflow && ./install.sh`.
-Runs on macOS (Homebrew + `Brewfile`) and Linux (apt/dnf/pacman via `setup/packages-linux.sh`); OpenSuperWhisper is macOS-only.
+A fresh machine is one command: `git clone https://github.com/zachmarmolejo/Omarchy-Style-MacOS && cd Omarchy-Style-MacOS && ./install.sh`.
+Runs exclusively on macOS with Homebrew and the `Brewfile`.
 
 ## Layout (repo path -> where it links)
 
@@ -32,14 +32,14 @@ Runs on macOS (Homebrew + `Brewfile`) and Linux (apt/dnf/pacman via `setup/packa
 - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md` - one global instruction file for every agent.
 - `config/firstmate/crew-dispatch.json` -> seeded into `~/firstmate/config/` - firstmate crew default model.
 - `config/skills/agentflow/` -> `~/.claude/skills/agentflow/` - this skill.
-- `Brewfile` (brew bundle, macOS), `setup/packages-linux.sh` (Linux packages: apt/dnf/pacman), `setup/skills.sh` (agent skills), `setup/tools.sh` (CLI tools + firstmate clone).
+- `Brewfile` (Homebrew dependencies), `setup/skills.sh` (agent skills), `setup/tools.sh` (CLI tools + firstmate clone).
 - `docs/tools.md` - run each tool in isolation. `docs/nvim.md` - nvim cheat sheet.
 
 ## The agent toolchain (Kun Chen's ecosystem)
 
-Full standalone usage lives in `~/Agentic-Workflow/docs/tools.md`. Quick map:
+Full standalone usage lives in `~/Omarchy-Style-MacOS/docs/tools.md`. Quick map:
 
-- OpenSuperWhisper - push-to-talk dictation (macOS-only menu bar app; skipped on Linux).
+- OpenSuperWhisper - push-to-talk dictation from a menu bar app.
 - AXI - design principles for agent-ergonomic CLIs (`/axi`; reference/build-time skill).
 - lavish - open agent-generated HTML for click-to-annotate feedback (`/lavish`, `lavish-axi <file>`).
 - no-mistakes - AI gate: `git push no-mistakes` runs review/test/lint/docs then opens a clean PR. ~4 agent passes per push; trim with `--skip`.
@@ -66,5 +66,5 @@ Full standalone usage lives in `~/Agentic-Workflow/docs/tools.md`. Quick map:
 
 - New machine: clone the repo, run `./install.sh`.
 - Update PaperWM: test an upstream release, then change the pinned commit in `setup/hammerspoon.sh`.
-- Add a package: edit `Brewfile` (macOS) and `setup/packages-linux.sh` (Linux). Add an agent skill: edit `setup/skills.sh`. Add a CLI tool: edit `setup/tools.sh`.
-- Change a config: edit it under `~/Agentic-Workflow/` (symlinked live), then commit and push.
+- Add a package: edit `Brewfile`. Add an agent skill: edit `setup/skills.sh`. Add a CLI tool: edit `setup/tools.sh`.
+- Change a config: edit it under `~/Omarchy-Style-MacOS/` (symlinked live), then commit and push.

@@ -35,8 +35,8 @@ The table uses the literal macOS keys configured in Hammerspoon.
 | `Command+Option+Arrow` | Focus and pan to the window in that direction |
 | `Command+Option+Shift+Arrow` | Swap the focused window in that direction |
 | `Command+Option+Control+Arrow` | Swap the focused window in that direction (macOS alias) |
-| `Command+Option+J` | Focus the next window |
-| `Command+Option+Shift+J` | Focus the previous window |
+| `Command+Option+J` | Cycle to the next window, wrapping at the end |
+| `Command+Option+Shift+J` | Cycle to the previous window, wrapping at the start |
 | `Command+Option+-/=` | Decrease or increase window width |
 | `Command+Option+Shift+-/=` | Decrease or increase window height |
 | `Command+Option+I/O` | Stack into or remove from the column on the left |

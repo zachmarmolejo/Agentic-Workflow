@@ -1,16 +1,8 @@
-# Starship prompt — fast, minimal cross-shell prompt (rose-pine styled).
-# Config lives at ~/.config/starship.toml
-eval "$(starship init zsh)"
-
 # ── Readability enhancements (bat, eza, fzf) ──
 # bat: colored 'cat' with line numbers
 if command -v bat &>/dev/null; then
     alias cat='bat --paging=never --style="changes"'
     export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-elif command -v batcat &>/dev/null; then
-    alias bat='batcat'
-    alias cat='batcat --paging=never'
-    export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
 fi
 # eza: better ls with colors and git status
 if command -v eza &>/dev/null; then
@@ -21,8 +13,7 @@ if command -v eza &>/dev/null; then
 fi
 # fzf: fuzzy finder
 if command -v fzf &>/dev/null; then
-    source ~/.fzf/shell/key-bindings.zsh 2>/dev/null
-    source ~/.fzf/shell/completion.zsh 2>/dev/null
+    source <(fzf --zsh)
     export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --info=inline --color=fg:#cdd6f4,bg:#1e1e2e,hl:#f38ba8,hl+:#f38ba8,info:#cba6f7,prompt:#89b4fa,pointer:#f5c2e7,marker:#a6e3a1,spinner:#f9e2af,header:#94e2d5'
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git 2>/dev/null || find . -type f 2>/dev/null'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

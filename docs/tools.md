@@ -1,10 +1,7 @@
 # Agentic toolchain — usage & running in isolation
 
-The seven tools below are installed by `./install.sh` (via the `Brewfile` on
-macOS / `setup/packages-linux.sh` on Linux, plus `setup/skills.sh` and
-`setup/tools.sh`). They compose into one workflow, but
-each runs **standalone** — this is the quick reference for using any of them on
-its own.
+The seven tools below are installed by `./install.sh` via the `Brewfile`, `setup/skills.sh`, and `setup/tools.sh`.
+They compose into one workflow, but each runs **standalone** — this is the quick reference for using any of them on its own.
 
 > Most are agent-agnostic and default to your first available harness
 > (`claude`, then `codex`). The CLI binaries live in `~/.local/bin`; gnhf/AXI
@@ -21,8 +18,7 @@ open -a OpenSuperWhisper      # launch (lives in the menu bar — no CLI)
 ```
 - Hold your shortcut (e.g. Right ⌥ / Fn), speak, release → text lands at the cursor.
 - Model / shortcut / mic are configured from the menu-bar icon.
-- macOS-only — `install.sh` skips it on Linux; for a Linux alternative see
-  [insanely-fast-whisper](https://github.com/Vaibhavs10/insanely-fast-whisper).
+- Installed as a macOS menu bar app through the `Brewfile`.
 
 ## 2. AXI — agent-ergonomic CLI design (reference skill)
 Principles for building CLIs that agents drive efficiently. Fires only when you're authoring/reviewing a CLI.

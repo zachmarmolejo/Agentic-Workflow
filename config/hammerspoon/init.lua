@@ -66,8 +66,6 @@ PaperWM:bindHotkeys({
   focus_right = { { "cmd", "alt" }, "right" },
   focus_up = { { "cmd", "alt" }, "up" },
   focus_down = { { "cmd", "alt" }, "down" },
-  focus_prev = { { "cmd", "alt", "shift" }, "j" },
-  focus_next = { { "cmd", "alt" }, "j" },
 
   swap_left = { { "cmd", "alt", "shift" }, "left" },
   swap_right = { { "cmd", "alt", "shift" }, "right" },
@@ -102,6 +100,189 @@ PaperWM:bindHotkeys({
   refresh_windows = { { "cmd", "alt", "shift" }, "r" },
   refresh_windows_forcedly = { { "cmd", "alt", "ctrl", "shift" }, "r" },
 })
+
+local function focusWithRetry(window)
+  window:focus()
+  hs.timer.doAfter(hs.window.animationDuration, function()
+    local focusedWindow = hs.window.focusedWindow()
+    if not focusedWindow or focusedWindow:id() ~= window:id() then
+      window:focus()
+    end
+  end)
+end
+
+local function windowStateIsConsistent()
+  local managedWindows = {}
+
+  for _, window in ipairs(PaperWM.window_filter:getWindows()) do
+    if not PaperWM.floating.isFloating(window) and not window:isFullScreen() then
+      managedWindows[window:id()] = window
+      local index = PaperWM.state.windowIndex(window)
+      local trackedWindow = index and PaperWM.state.windowList(index.space, index.col, index.row)
+      local windowSpace = hs.spaces.windowSpaces(window)[1]
+      if not index or index.space ~= windowSpace
+        or not trackedWindow or trackedWindow:id() ~= window:id() then
+        return false
+      end
+    end
+  end
+
+  for space, columns in pairs(PaperWM.state.get().window_list) do
+    for col, rows in ipairs(columns) do
+      for row, window in ipairs(rows) do
+        local index = PaperWM.state.windowIndex(window)
+        if not managedWindows[window:id()] or not index
+          or index.space ~= space or index.col ~= col or index.row ~= row then
+          return false
+        end
+      end
+    end
+  end
+
+  return true
+end
+
+local function repairWindowState()
+  if windowStateIsConsistent() then
+    return true
+  end
+
+  local focusedWindow = hs.window.focusedWindow()
+  local savedWindows = {}
+  local savedFrames = {}
+  local savedXPositions = {}
+  for _, window in ipairs(PaperWM.window_filter:getWindows()) do
+    if not PaperWM.floating.isFloating(window) and not window:isFullScreen() then
+      local id = window:id()
+      local index = PaperWM.state.windowIndex(window)
+      savedWindows[id] = window
+      savedFrames[id] = window:frame()
+      if index then
+        savedXPositions[id] = {
+          space = index.space,
+          x = PaperWM.state.xPositions(index.space)[id],
+        }
+      else
+        for space, positions in pairs(PaperWM.state.get().x_positions) do
+          if positions[id] ~= nil then
+            savedXPositions[id] = { space = space, x = positions[id] }
+            break
+          end
+        end
+      end
+    end
+  end
+
+  local savedStacks = {}
+  local stackedWindowIDs = {}
+  for _, columns in pairs(PaperWM.state.get().window_list) do
+    for _, rows in ipairs(columns) do
+      local stack = {}
+      for _, window in ipairs(rows) do
+        local id = window:id()
+        if savedWindows[id] and not stackedWindowIDs[id] then
+          table.insert(stack, id)
+          stackedWindowIDs[id] = true
+        end
+      end
+      if #stack > 1 then
+        table.insert(savedStacks, stack)
+      end
+    end
+  end
+
+  local defaultWidth = PaperWM.default_width
+  PaperWM.default_width = nil
+  local ok, err = xpcall(function()
+    PaperWM.events.stop()
+    PaperWM:start()
+
+    for _, stack in ipairs(savedStacks) do
+      local firstWindow = savedWindows[stack[1]]
+      for row = 2, #stack do
+        local window = savedWindows[stack[row]]
+        local firstIndex = PaperWM.state.windowIndex(firstWindow)
+        local index = PaperWM.state.windowIndex(window)
+        if firstIndex and index and index.space == firstIndex.space and index.col ~= firstIndex.col then
+          local sourceColumn = PaperWM.state.windowList(index.space, index.col)
+          local removedWindow = table.remove(sourceColumn, index.row)
+          firstIndex = PaperWM.state.windowIndex(firstWindow)
+          table.insert(PaperWM.state.windowList(firstIndex.space, firstIndex.col), removedWindow)
+        end
+      end
+    end
+
+    for id, frame in pairs(savedFrames) do
+      local window = savedWindows[id]
+      local index = PaperWM.state.windowIndex(window)
+      if index then
+        PaperWM.windows.moveWindow(window, frame)
+        local savedPosition = savedXPositions[id]
+        local x = savedPosition and savedPosition.space == index.space and savedPosition.x or frame.x
+        PaperWM.state.xPositions(index.space)[id] = x
+      end
+    end
+
+    if not windowStateIsConsistent() then
+      error("PaperWM window state remained inconsistent after rebuilding")
+    end
+  end, debug.traceback)
+  PaperWM.default_width = defaultWidth
+  if not ok then
+    PaperWM.logger.e(err)
+    return false
+  end
+  if focusedWindow then
+    focusWithRetry(focusedWindow)
+  end
+  return true
+end
+
+local function cycleWindow(direction)
+  if not repairWindowState() then
+    return
+  end
+
+  local focusedWindow = hs.window.focusedWindow()
+  local focusedIndex = focusedWindow and PaperWM.state.windowIndex(focusedWindow)
+  if not focusedIndex then
+    return
+  end
+
+  if PaperWM.windows.focusWindow(direction, focusedIndex) then
+    return
+  end
+
+  local columns = PaperWM.state.windowList(focusedIndex.space)
+  if #columns == 0 then
+    return
+  end
+
+  local targetWindow
+  if direction == PaperWM.windows.Direction.NEXT then
+    targetWindow = columns[1][1]
+  else
+    local lastColumn = columns[#columns]
+    targetWindow = lastColumn[#lastColumn]
+  end
+
+  if targetWindow:id() == focusedWindow:id() then
+    return
+  end
+
+  focusWithRetry(targetWindow)
+end
+
+local function cycleNextWindow()
+  cycleWindow(PaperWM.windows.Direction.NEXT)
+end
+
+local function cyclePreviousWindow()
+  cycleWindow(PaperWM.windows.Direction.PREVIOUS)
+end
+
+hs.hotkey.bind({ "cmd", "alt" }, "j", cycleNextWindow)
+hs.hotkey.bind({ "cmd", "alt", "shift" }, "j", cyclePreviousWindow)
 
 local function bindSwapAlias(key, direction)
   hs.hotkey.bind({ "cmd", "alt", "ctrl" }, key, function()
@@ -187,6 +368,8 @@ local paperActions = PaperWM.actions.actions()
 local customKeybindingActions = {
   open_wezterm = openWezTerm,
   open_browser = openBrowser,
+  focus_next = cycleNextWindow,
+  focus_prev = cyclePreviousWindow,
 }
 
 local function bindSilentMove(index)
@@ -224,8 +407,8 @@ local keybindingChoices = {
   { text = "Command+Option+Shift+Up", subText = "Swap the focused window up", action = "swap_up" },
   { text = "Command+Option+Shift+Down", subText = "Swap the focused window down", action = "swap_down" },
   { text = "Command+Option+Control+Arrow", subText = "Alternate directional swap binding" },
-  { text = "Command+Option+J", subText = "Focus the next window", action = "focus_next" },
-  { text = "Command+Option+Shift+J", subText = "Focus the previous window", action = "focus_prev" },
+  { text = "Command+Option+J", subText = "Cycle to the next window", action = "focus_next" },
+  { text = "Command+Option+Shift+J", subText = "Cycle to the previous window", action = "focus_prev" },
   { text = "Command+Option+-", subText = "Decrease window width", action = "decrease_width" },
   { text = "Command+Option+=", subText = "Increase window width", action = "increase_width" },
   { text = "Command+Option+Shift+-", subText = "Decrease window height", action = "decrease_height" },
@@ -431,6 +614,9 @@ PaperWM.activeBorder = activeBorder
 PaperWM.borderWindowFilter = borderWindowFilter
 PaperWM.hoverWatcher = hoverWatcher
 PaperWM.openBrowser = openBrowser
+PaperWM.repairWindowState = repairWindowState
+PaperWM.cycleNextWindow = cycleNextWindow
+PaperWM.cyclePreviousWindow = cyclePreviousWindow
 
 PaperWM:start()
 PaperWM.hoverWatcher:start()
