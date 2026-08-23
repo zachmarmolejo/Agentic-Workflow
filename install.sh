@@ -23,21 +23,26 @@ if [ "$(uname -s)" != "Darwin" ]; then
   exit 1
 fi
 
-if ! command -v brew >/dev/null 2>&1; then
-  info "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-# Prefer the native Homebrew installation for this Mac's architecture.
-if [ "$(uname -m)" = "arm64" ] && [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [ -x /usr/local/bin/brew ]; then
-  eval "$(/usr/local/bin/brew shellenv)"
-elif [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+if [ -n "${OMARCHY_BREW_BIN:-}" ]; then
+  BREW_BIN="$OMARCHY_BREW_BIN"
+else
+  if ! command -v brew >/dev/null 2>&1; then
+    info "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+  # Prefer the native Homebrew installation for this Mac's architecture.
+  if [ "$(uname -m)" = "arm64" ] && [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  elif [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+  BREW_BIN="$(command -v brew)"
 fi
 
 info "Installing packages from Brewfile..."
-brew bundle --file="$REPO_DIR/Brewfile"
+"$BREW_BIN" bundle --file="$REPO_DIR/Brewfile"
 ok "packages ready"
 
 # --- 2. Symlink config files --------------------------------------------------
@@ -66,6 +71,7 @@ link_file "$REPO_DIR/config/tmux/tmux.conf"      "$HOME/.tmux.conf"
 link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
 link_file "$REPO_DIR/config/hammerspoon/init.lua" "$HOME/.hammerspoon/init.lua"
+link_file "$REPO_DIR/config/hammerspoon/paperwm_recovery.lua" "$HOME/.hammerspoon/paperwm_recovery.lua"
 
 info "Installing PaperWM..."
 bash "$REPO_DIR/setup/hammerspoon.sh"
@@ -88,6 +94,10 @@ ok "Mission Control configured for PaperWM"
 warn "grant Hammerspoon access in Privacy & Security > Accessibility on first launch"
 killall Hammerspoon 2>/dev/null || true
 open -a Hammerspoon
+
+info "Installing desktop wallpaper..."
+bash "$REPO_DIR/setup/wallpaper.sh"
+ok "wallpaper ready"
 
 # Global agent instructions - one file shared by Claude Code, Codex, and AGENTS.md
 link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
@@ -145,6 +155,8 @@ if [ "$FOUND_MANAGED_BLOCK" = false ]; then
   write_shell_block >> "$ZSHRC_TMP"
 fi
 if ! grep -Eq '^[[:space:]]*([^#[:space:]][^#]*&&[[:space:]]*)?eval[[:space:]]+.*starship init zsh' "$ZSHRC_TMP"; then
+  # This command must run when Zsh loads the file.
+  # shellcheck disable=SC2016
   printf '\n# Starship prompt\neval "$(starship init zsh)"\n' >> "$ZSHRC_TMP"
 fi
 

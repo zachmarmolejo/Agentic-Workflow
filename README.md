@@ -25,6 +25,7 @@ Homebrew, npm tools, no-mistakes, and treehouse use their current upstream relea
 | Area | Tool | What it gives you |
 |------|------|-------------------|
 | Window management | [Hammerspoon](https://www.hammerspoon.org/) + [PaperWM](https://github.com/mogenson/PaperWM.spoon) | Horizontally scrolling tiling, four managed Spaces, hover focus, and searchable keybindings |
+| Desktop | Original Rosé Pine Moon wallpaper | A lakeside pagoda scene applied to each connected display |
 | Terminal | [WezTerm](https://wezfurlong.org/wezterm/) | `rose-pine-moon` theme, Hack Nerd Font, 80% opacity + macOS background blur, rose-tinted tab bar that hides on a single tab |
 | Multiplexer | [tmux](https://github.com/tmux/tmux) | Catppuccin Mocha status bar, 50k scrollback, mouse support, right-click paste, intuitive pane splits |
 | Prompt | [Starship](https://starship.rs/) | bold blue dir · gray git branch · yellow command-duration · purple `❯` |
@@ -44,12 +45,25 @@ See [docs/window-management.md](docs/window-management.md) for PaperWM behavior 
    - `config/starship.toml` -> `~/.config/starship.toml`
    - `config/tmux/tmux.conf` -> `~/.tmux.conf`
    - `config/nvim/` -> `~/.config/nvim/` (LazyVim)
-   - `config/hammerspoon/init.lua` -> `~/.hammerspoon/init.lua` (PaperWM)
+   - `config/hammerspoon/init.lua` and `paperwm_recovery.lua` -> `~/.hammerspoon/` (PaperWM)
    - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md`
    - `config/skills/agentflow/` -> `~/.claude/skills/agentflow/` (the `/agentflow` skill)
 3. Installs PaperWM and configures macOS Spaces, trackpad gestures, and the Hammerspoon keybinding chooser.
-4. Maintains a marked readability block in `~/.zshrc` and ensures Starship is initialized without duplicating an existing setup.
-5. Installs the agent skills and CLI toolchain.
+4. Copies the original wallpaper to `~/Pictures/Wallpapers/Omarchy-Style-MacOS/` and applies it to each connected display.
+5. Maintains a marked readability block in `~/.zshrc` and ensures Starship is initialized without duplicating an existing setup.
+6. Installs the agent skills and CLI toolchain.
+
+## Testing
+
+Run the macOS validation suite before committing installer or configuration changes:
+
+```bash
+tests/run.sh
+```
+
+The suite checks shell and Lua syntax, ShellCheck, JSON and TOML parsing, the Brewfile, Starship, tmux, isolated installer behavior, wallpaper installation, and PaperWM state recovery and cycling.
+GitHub Actions runs the same entry point on macOS for every pull request and push to `main`.
+Accessibility permissions, Spaces behavior, and physical multi-display movement still require a manual Hammerspoon smoke test.
 
 ## Agentic toolchain
 
@@ -172,7 +186,8 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 │   ├── wezterm/
 │   │   └── wezterm.lua     # terminal appearance + behavior
 │   ├── hammerspoon/
-│   │   └── init.lua        # PaperWM window management + keybindings
+│   │   ├── init.lua        # PaperWM setup + keybindings
+│   │   └── paperwm_recovery.lua # state repair + wraparound cycling
 │   ├── tmux/
 │   │   └── tmux.conf      # tmux: Catppuccin Mocha, mouse, scrollback, keybinds
 │   ├── nvim/               # LazyVim config (rose-pine-moon, transparent)
@@ -187,8 +202,10 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 │   └── zshrc.snippet       # lines install.sh adds to ~/.zshrc
 ├── setup/
 │   ├── hammerspoon.sh      # installs the pinned PaperWM release
+│   ├── wallpaper.sh        # installs and applies the desktop wallpaper
 │   ├── skills.sh           # installs agent skills (axi [reference], lavish)
 │   └── tools.sh            # installs CLI binaries (no-mistakes, treehouse, gnhf, AXI CLIs) + clones firstmate
+├── tests/                  # macOS CI and isolated regression tests
 ├── docs/
 │   ├── nvim.md             # Neovim cheat sheet
 │   ├── tools.md            # how to run each agentic tool in isolation
@@ -203,7 +220,7 @@ people up. Press `<Space>` and pause anytime to get the which-key menu.
 - [x] tmux config (Catppuccin Mocha, mouse, scrollback, pane keybinds)
 - [x] Readability tools (bat, eza, fzf)
 - [x] Agentic toolchain (OpenSuperWhisper · AXI · lavish · no-mistakes · gnhf · treehouse · firstmate)
-- [ ] Desktop wallpaper (lakeside pagoda at sunset — see `assets/`)
+- [x] Desktop wallpaper (original lakeside pagoda artwork - see `assets/`)
 - [x] Neovim (LazyVim, rose-pine-moon)
 - [x] Reproducible macOS bootstrap with Homebrew
 - [ ] Security-lab tooling (wrap recon/scan CLIs as AXI tools)

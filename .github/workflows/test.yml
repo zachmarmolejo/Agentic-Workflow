@@ -1,0 +1,41 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: macOS
+    runs-on: macos-15
+    timeout-minutes: 15
+
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install test tools
+        run: brew install shellcheck lua@5.4 starship tmux
+
+      - name: Run tests
+        shell: /bin/bash --noprofile --norc -euo pipefail {0}
+        run: |
+          export PATH="$(brew --prefix lua@5.4)/bin:$PATH"
+          /bin/bash tests/run.sh

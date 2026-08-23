@@ -26,7 +26,7 @@ Runs exclusively on macOS with Homebrew and the `Brewfile`.
 ## Layout (repo path -> where it links)
 
 - `config/wezterm/wezterm.lua` -> `~/.config/wezterm/` - WezTerm, rose-pine-moon, 80% opacity + blur.
-- `config/hammerspoon/init.lua` -> `~/.hammerspoon/init.lua` - PaperWM scrolling window management on macOS. Cheat sheet: `docs/window-management.md`.
+- `config/hammerspoon/init.lua` and `paperwm_recovery.lua` -> `~/.hammerspoon/` - PaperWM scrolling window management on macOS. Cheat sheet: `docs/window-management.md`.
 - `config/starship.toml` -> `~/.config/` - Starship prompt.
 - `config/nvim/` -> `~/.config/nvim/` - LazyVim, rose-pine-moon, transparent. Cheat sheet: `docs/nvim.md`.
 - `config/agents/AGENTS.md` -> `~/.claude/CLAUDE.md`, `~/AGENTS.md`, `~/.codex/AGENTS.md` - one global instruction file for every agent.
