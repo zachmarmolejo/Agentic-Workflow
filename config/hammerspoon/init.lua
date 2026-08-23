@@ -50,6 +50,7 @@ PaperWM.default_width = 0.62
 PaperWM.window_ratios = { 0.38, 0.5, 0.62, 0.75 }
 PaperWM.infinite_loop_window = true
 PaperWM.center_mouse = true
+PaperWM.window_filter = PaperWM.window_filter:setAppFilter("Finder", false)
 
 -- Native horizontal Space gestures are disabled by the installer.
 PaperWM.swipe_fingers = 3
