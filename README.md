@@ -5,8 +5,6 @@ A reproducible macOS environment inspired by Omarchy's keyboard-driven workflow 
 The setup combines PaperWM window management, a Rosé Pine Moon terminal and editor, and practical shell tools.
 It is built exclusively for macOS.
 
-![Rosé Pine Moon wallpaper](assets/wallpaper.png)
-
 ## Included
 
 | Area | Tools | Configuration |
