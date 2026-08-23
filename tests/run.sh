@@ -42,7 +42,6 @@ else
   git diff --check
 fi
 /bin/bash tests/install_test.sh
-/bin/bash tests/wallpaper_test.sh
 lua tests/paperwm_recovery_test.lua
 
 printf 'All tests passed.\n'

@@ -95,10 +95,6 @@ warn "grant Hammerspoon access in Privacy & Security > Accessibility on first la
 killall Hammerspoon 2>/dev/null || true
 open -a Hammerspoon
 
-info "Installing desktop wallpaper..."
-bash "$REPO_DIR/setup/wallpaper.sh"
-ok "wallpaper ready"
-
 # --- 3. Neovim / LazyVim ------------------------------------------------------
 if command -v nvim >/dev/null 2>&1; then
   bash "$REPO_DIR/setup/nvim.sh"

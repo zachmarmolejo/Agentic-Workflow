@@ -2,7 +2,7 @@
 
 A reproducible macOS environment inspired by Omarchy's keyboard-driven workflow and cohesive visual style.
 
-The setup combines PaperWM window management, a Rosé Pine Moon terminal and editor, practical shell tools, and an original matching wallpaper.
+The setup combines PaperWM window management, a Rosé Pine Moon terminal and editor, and practical shell tools.
 It is built exclusively for macOS.
 
 ![Rosé Pine Moon wallpaper](assets/wallpaper.png)
@@ -17,7 +17,7 @@ It is built exclusively for macOS.
 | Prompt | Starship | Compact directory, Git state, command duration, and status prompt |
 | Editor | Neovim and LazyVim | Rosé Pine Moon, transparent editing buffers, LSP, completion, project search, and Treesitter |
 | Shell | bat, eza, and fzf | Readable file output, directory listings, fuzzy file search, aliases, and colored manual pages |
-| Desktop | Original wallpaper | A 2560x1440 Rosé Pine Moon wallpaper applied to every connected display |
+| Optional artwork | Original wallpaper | A bundled 2560x1440 Rosé Pine Moon image that the installer never copies or applies |
 
 All applications and command-line packages are declared in [`Brewfile`](Brewfile).
 
@@ -46,9 +46,10 @@ After installation:
 2. Symlinks the repository's terminal, prompt, tmux, Neovim, and Hammerspoon configurations into the home directory.
 3. Installs PaperWM at the commit pinned in `setup/hammerspoon.sh`.
 4. Configures Spaces and trackpad settings for PaperWM, restarts affected macOS services, and launches Hammerspoon.
-5. Copies the wallpaper to `~/Pictures/Wallpapers/Omarchy-Style-MacOS/` and applies it to every display.
-6. Restores the LazyVim plugins pinned in `config/nvim/lazy-lock.json` and verifies the dashboard and theme.
-7. Maintains a marked readability block in `~/.zshrc` and initializes Starship without duplicating an existing setup.
+5. Restores the LazyVim plugins pinned in `config/nvim/lazy-lock.json` and verifies the dashboard and theme.
+6. Maintains a marked readability block in `~/.zshrc` and initializes Starship without duplicating an existing setup.
+
+The installer does not copy, apply, or otherwise modify desktop wallpapers.
 
 The managed configuration targets are:
 
@@ -65,13 +66,13 @@ The managed configuration targets are:
 
 - [Window management](docs/window-management.md): required macOS settings, PaperWM behavior, keybindings, and maintenance.
 - [Neovim cheat sheet](docs/nvim.md): LazyVim modes, navigation, editing, search, and project shortcuts.
-- [Wallpaper assets](assets/README.md): editable source, installed image, and artwork provenance.
+- [Optional wallpaper assets](assets/README.md): editable source, raster image, and artwork provenance.
 
 ## Repository Layout
 
 ```text
 .
-├── assets/                  # Wallpaper source and installed raster image
+├── assets/                  # Optional wallpaper source and raster image
 ├── config/
 │   ├── hammerspoon/         # PaperWM integration and state recovery
 │   ├── nvim/                # LazyVim configuration and plugin lockfile
@@ -79,9 +80,9 @@ The managed configuration targets are:
 │   ├── starship.toml        # Shell prompt
 │   └── wezterm/             # Terminal appearance and behavior
 ├── docs/                    # Focused user guides
-├── setup/                   # PaperWM, Neovim, and wallpaper installers
+├── setup/                   # PaperWM and Neovim installers
 ├── shell/                   # Managed Zsh readability block
-├── tests/                   # Installer, wallpaper, and PaperWM regression tests
+├── tests/                   # Installer and PaperWM regression tests
 ├── Brewfile                 # Homebrew dependencies
 └── install.sh               # macOS bootstrap entry point
 ```
@@ -94,7 +95,7 @@ Run the complete validation suite on macOS:
 tests/run.sh
 ```
 
-The suite checks shell and Lua syntax, ShellCheck, JSON and TOML parsing, Homebrew declarations, Starship, tmux, isolated installer behavior, wallpaper installation, and PaperWM recovery behavior.
+The suite checks shell and Lua syntax, ShellCheck, JSON and TOML parsing, Homebrew declarations, Starship, tmux, isolated installer behavior, and PaperWM recovery behavior.
 GitHub Actions runs the same suite for every pull request and for pushes to `main`.
 Accessibility permissions, Spaces behavior, gestures, and multi-display movement still require a manual Hammerspoon smoke test.
 

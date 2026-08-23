@@ -84,7 +84,10 @@ assert_symlink "$CASE_DIR/home/.hammerspoon/init.lua" "$REPO_DIR/config/hammersp
 assert_symlink "$CASE_DIR/home/.hammerspoon/paperwm_recovery.lua" "$REPO_DIR/config/hammerspoon/paperwm_recovery.lua"
 assert_contains "$COMMAND_LOG" "brew bundle --file=$REPO_DIR/Brewfile"
 assert_contains "$COMMAND_LOG" "open -a Hammerspoon"
-assert_contains "$COMMAND_LOG" "bash $REPO_DIR/setup/wallpaper.sh"
+if grep -Fq "wallpaper" "$COMMAND_LOG"; then
+  fail "installer invoked wallpaper setup"
+fi
+[ ! -e "$CASE_DIR/home/Pictures/Wallpapers" ] || fail "installer created a wallpaper directory"
 [ "$(grep -c '# >>> Omarchy-Style-MacOS >>>' "$CASE_DIR/home/.zshrc")" -eq 1 ] || fail "wrong managed block count"
 [ "$(grep -Ec '^[[:space:]]*eval[[:space:]]+.*starship init zsh' "$CASE_DIR/home/.zshrc")" -eq 1 ] || fail "wrong Starship init count"
 first_hash="$(shasum "$CASE_DIR/home/.zshrc")"
