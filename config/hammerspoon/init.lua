@@ -356,47 +356,6 @@ local function isManagedWindow(window)
   return false
 end
 
-local activeBorder = hs.canvas.new({ x = 0, y = 0, w = 1, h = 1 })
-activeBorder[1] = {
-  type = "rectangle",
-  action = "stroke",
-  frame = { x = "0%", y = "0%", w = "100%", h = "100%" },
-  padding = 2,
-  roundedRectRadii = { xRadius = 8, yRadius = 8 },
-  strokeColor = { hex = "33CCFF", alpha = 0.95 },
-  strokeWidth = 3,
-}
-activeBorder:behavior({ "canJoinAllSpaces", "fullScreenAuxiliary", "stationary", "ignoresCycle" })
-activeBorder:level(hs.canvas.windowLevels.overlay)
-activeBorder:clickActivating(false)
-activeBorder:wantsLayer(true)
-
-local function updateActiveBorder()
-  local window = hs.window.focusedWindow()
-  if not isManagedWindow(window) then
-    activeBorder:hide()
-    return
-  end
-
-  activeBorder:frame(window:frame())
-  activeBorder:show()
-end
-
-local borderWindowFilter = hs.window.filter.new()
-borderWindowFilter:subscribe({
-  hs.window.filter.windowFocused,
-  hs.window.filter.windowMoved,
-  hs.window.filter.windowUnfullscreened,
-}, updateActiveBorder)
-borderWindowFilter:subscribe({
-  hs.window.filter.windowDestroyed,
-  hs.window.filter.windowUnfocused,
-  hs.window.filter.windowFullscreened,
-  hs.window.filter.windowNotVisible,
-}, function()
-  hs.timer.doAfter(0.05, updateActiveBorder)
-end)
-
 local hoverCheckPending = false
 local hoverWatcher = hs.eventtap.new({ hs.eventtap.event.types.mouseMoved }, function()
   if hoverCheckPending or keybindingChooser:isVisible() then
@@ -434,8 +393,6 @@ local hoverWatcher = hs.eventtap.new({ hs.eventtap.event.types.mouseMoved }, fun
 end)
 
 PaperWM.keybindingChooser = keybindingChooser
-PaperWM.activeBorder = activeBorder
-PaperWM.borderWindowFilter = borderWindowFilter
 PaperWM.hoverWatcher = hoverWatcher
 PaperWM.openBrowser = openBrowser
 PaperWM.repairWindowState = paperwmRecovery.repairWindowState
@@ -444,4 +401,3 @@ PaperWM.cyclePreviousWindow = cyclePreviousWindow
 
 PaperWM:start()
 PaperWM.hoverWatcher:start()
-updateActiveBorder()

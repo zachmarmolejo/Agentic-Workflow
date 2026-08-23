@@ -4,7 +4,7 @@ Hammerspoon and PaperWM provide an Omarchy-like, horizontally scrolling window l
 
 PaperWM tiles normal windows into columns that can extend beyond the visible screen.
 Changing focus pans the strip, and three-finger horizontal swipes pan it directly.
-Moving the pointer over a window focuses it and moves the cyan active-window border to it.
+Moving the pointer over a window focuses it.
 
 ## macOS settings
 

@@ -99,14 +99,6 @@ info "Installing desktop wallpaper..."
 bash "$REPO_DIR/setup/wallpaper.sh"
 ok "wallpaper ready"
 
-# Global agent instructions - one file shared by Claude Code, Codex, and AGENTS.md
-link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/AGENTS.md"
-link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.claude/CLAUDE.md"
-link_file "$REPO_DIR/config/agents/AGENTS.md"    "$HOME/.codex/AGENTS.md"
-
-# agentflow skill - captures this whole setup; loads on demand in Claude Code
-link_file "$REPO_DIR/config/skills/agentflow"    "$HOME/.claude/skills/agentflow"
-
 # --- 3. Neovim / LazyVim ------------------------------------------------------
 if command -v nvim >/dev/null 2>&1; then
   bash "$REPO_DIR/setup/nvim.sh"
@@ -169,20 +161,6 @@ else
   ok "updated shell setup in ~/.zshrc"
 fi
 rm "$ZSHRC_TMP"
-
-# --- 5. Agent skills ----------------------------------------------------------
-if command -v npx >/dev/null 2>&1; then
-  info "Installing agent skills..."
-  bash "$REPO_DIR/setup/skills.sh"
-  ok "agent skills installed"
-else
-  warn "npx not found - skipping agent skills (install Node, then run setup/skills.sh)"
-fi
-
-# --- 6. CLI tools (curl-installed binaries) -----------------------------------
-info "Installing CLI tools..."
-bash "$REPO_DIR/setup/tools.sh"
-ok "CLI tools installed"
 
 echo
 info "Done. Open a new WezTerm window (or run: source ~/.zshrc)."
