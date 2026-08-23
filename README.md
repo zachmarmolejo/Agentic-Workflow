@@ -101,6 +101,7 @@ Accessibility permissions, Spaces behavior, gestures, and multi-display movement
 
 ## Credits
 
+- Workflow and visual inspiration from [Omarchy 4](https://omarchy.org/) by [David Heinemeier Hansson (DHH)](https://dhh.dk/).
 - Terminal styling adapted from [kunchenguid/dotfiles-mac-nix](https://github.com/kunchenguid/dotfiles-mac-nix).
 - Color palette from [Rosé Pine](https://rosepinetheme.com/).
 - Window management powered by [PaperWM.spoon](https://github.com/mogenson/PaperWM.spoon).
