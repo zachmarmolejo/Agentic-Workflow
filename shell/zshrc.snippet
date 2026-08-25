@@ -1,3 +1,9 @@
+# Make project commands installed in ~/.local/bin available to the shell.
+case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
+
 # ── Readability enhancements (bat, eza, fzf) ──
 # bat: colored 'cat' with line numbers
 if command -v bat &>/dev/null; then

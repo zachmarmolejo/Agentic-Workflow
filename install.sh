@@ -72,6 +72,7 @@ link_file "$REPO_DIR/config/nvim"                "$HOME/.config/nvim"
 
 link_file "$REPO_DIR/config/hammerspoon/init.lua" "$HOME/.hammerspoon/init.lua"
 link_file "$REPO_DIR/config/hammerspoon/paperwm_recovery.lua" "$HOME/.hammerspoon/paperwm_recovery.lua"
+link_file "$REPO_DIR/bin/omarchy-window-management" "$HOME/.local/bin/omarchy-window-management"
 
 info "Installing PaperWM..."
 bash "$REPO_DIR/setup/hammerspoon.sh"

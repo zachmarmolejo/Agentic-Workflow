@@ -3,6 +3,16 @@ require("hs.ipc")
 hs.autoLaunch(true)
 hs.window.animationDuration = 0
 
+local stateHome = os.getenv("HOME") .. "/.local/state"
+local windowManagementDisabled = io.open(
+  stateHome .. "/omarchy-style-macos/window-management-disabled",
+  "r"
+)
+if windowManagementDisabled then
+  windowManagementDisabled:close()
+  return
+end
+
 if not hs.accessibilityState(true) then
   hs.accessibilityStateCallback = function()
     if hs.accessibilityState() then

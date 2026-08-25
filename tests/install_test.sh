@@ -82,6 +82,7 @@ assert_symlink "$CASE_DIR/home/.tmux.conf" "$REPO_DIR/config/tmux/tmux.conf"
 assert_symlink "$CASE_DIR/home/.config/nvim" "$REPO_DIR/config/nvim"
 assert_symlink "$CASE_DIR/home/.hammerspoon/init.lua" "$REPO_DIR/config/hammerspoon/init.lua"
 assert_symlink "$CASE_DIR/home/.hammerspoon/paperwm_recovery.lua" "$REPO_DIR/config/hammerspoon/paperwm_recovery.lua"
+assert_symlink "$CASE_DIR/home/.local/bin/omarchy-window-management" "$REPO_DIR/bin/omarchy-window-management"
 assert_contains "$COMMAND_LOG" "brew bundle --file=$REPO_DIR/Brewfile"
 assert_contains "$COMMAND_LOG" "open -a Hammerspoon"
 if grep -Fq "wallpaper" "$COMMAND_LOG"; then
@@ -90,6 +91,7 @@ fi
 [ ! -e "$CASE_DIR/home/Pictures/Wallpapers" ] || fail "installer created a wallpaper directory"
 [ "$(grep -c '# >>> Omarchy-Style-MacOS >>>' "$CASE_DIR/home/.zshrc")" -eq 1 ] || fail "wrong managed block count"
 [ "$(grep -Ec '^[[:space:]]*eval[[:space:]]+.*starship init zsh' "$CASE_DIR/home/.zshrc")" -eq 1 ] || fail "wrong Starship init count"
+assert_contains "$CASE_DIR/home/.zshrc" 'export PATH="$HOME/.local/bin:$PATH"'
 first_hash="$(shasum "$CASE_DIR/home/.zshrc")"
 first_backups="$(find "$CASE_DIR/home" -name '*.bak.*' | wc -l | tr -d ' ')"
 run_installer > "$CASE_DIR/second.out"

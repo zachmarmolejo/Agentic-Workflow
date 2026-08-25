@@ -4,9 +4,9 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
-/bin/bash -n install.sh setup/*.sh tests/*.sh
+/bin/bash -n install.sh bin/* setup/*.sh tests/*.sh
 /bin/zsh -n shell/zshrc.snippet
-shellcheck --shell=bash install.sh setup/*.sh tests/*.sh
+shellcheck --shell=bash install.sh bin/* setup/*.sh tests/*.sh
 
 while IFS= read -r file; do
   luac -p "$file"
@@ -42,6 +42,7 @@ else
   git diff --check
 fi
 /bin/bash tests/install_test.sh
+/bin/bash tests/window_management_test.sh
 lua tests/paperwm_recovery_test.lua
 
 printf 'All tests passed.\n'

@@ -36,6 +36,8 @@ After installation:
 2. Log out and back in if **Displays have separate Spaces** was previously disabled.
 3. Open a new WezTerm window, or run `source ~/.zshrc` in the current shell.
 
+Run `omarchy-window-management disable` for standard free-form macOS windows and `omarchy-window-management enable` to restore the Omarchy-style tiled layout.
+
 ## Installer Behavior
 
 `install.sh` performs the following work:
@@ -59,6 +61,7 @@ The managed configuration targets are:
 | `config/nvim/` | `~/.config/nvim/` |
 | `config/hammerspoon/init.lua` | `~/.hammerspoon/init.lua` |
 | `config/hammerspoon/paperwm_recovery.lua` | `~/.hammerspoon/paperwm_recovery.lua` |
+| `bin/omarchy-window-management` | `~/.local/bin/omarchy-window-management` |
 
 ## Documentation
 
@@ -71,6 +74,7 @@ The managed configuration targets are:
 ```text
 .
 ├── assets/                  # Optional wallpaper source and raster image
+├── bin/                     # Installed user commands
 ├── config/
 │   ├── hammerspoon/         # PaperWM integration and state recovery
 │   ├── nvim/                # LazyVim configuration and plugin lockfile

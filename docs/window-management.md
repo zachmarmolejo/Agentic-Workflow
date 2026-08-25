@@ -25,6 +25,25 @@ Mission Control will appear briefly while it does this.
 Hammerspoon also needs permission under **System Settings > Privacy & Security > Accessibility**.
 It does not require disabling System Integrity Protection.
 
+## Enable or disable window management
+
+The installer adds `omarchy-window-management` to `~/.local/bin` and makes that directory available in new Zsh sessions.
+Disable PaperWM when you want standard macOS free-form window positioning:
+
+```bash
+omarchy-window-management disable
+```
+
+Re-enable the Omarchy-style tiled layout with:
+
+```bash
+omarchy-window-management enable
+```
+
+Use `omarchy-window-management toggle` to switch modes or `omarchy-window-management status` to show the current mode.
+The choice persists across Hammerspoon and macOS restarts.
+Disabling stops tiling, panning, pointer focus, PaperWM gestures, and PaperWM keybindings; it does not close Hammerspoon or change the terminal and editor styling.
+
 ## Keybindings
 
 The table uses the literal macOS keys configured in Hammerspoon.

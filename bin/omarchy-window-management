@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+STATE_DIR="$HOME/.local/state/omarchy-style-macos"
+DISABLED_FILE="$STATE_DIR/window-management-disabled"
+
+usage() {
+  printf 'Usage: %s {enable|disable|toggle|status}\n' "$(basename "$0")" >&2
+  exit 2
+}
+
+reload_hammerspoon() {
+  local lua_code="$1"
+  local hs_bin="${OMARCHY_HS_BIN:-}"
+
+  if [ -z "$hs_bin" ]; then
+    hs_bin="$(command -v hs 2>/dev/null || true)"
+  fi
+  if [ -z "$hs_bin" ] && [ -x /Applications/Hammerspoon.app/Contents/Frameworks/hs/hs ]; then
+    hs_bin=/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs
+  fi
+
+  if [ -n "$hs_bin" ] && "$hs_bin" -c "$lua_code" >/dev/null 2>&1; then
+    return
+  fi
+
+  "${OMARCHY_OPEN_BIN:-open}" -g -a Hammerspoon
+}
+
+enable_window_management() {
+  rm -f "$DISABLED_FILE"
+  reload_hammerspoon 'hs.reload()'
+  printf 'Omarchy window management enabled.\n'
+}
+
+disable_window_management() {
+  mkdir -p "$STATE_DIR"
+  : > "$DISABLED_FILE"
+  reload_hammerspoon 'if PaperWM then pcall(function() PaperWM:stop() end) end; hs.reload()'
+  printf 'Omarchy window management disabled; windows are now freely positionable.\n'
+}
+
+case "${1:-}" in
+  enable)
+    enable_window_management
+    ;;
+  disable)
+    disable_window_management
+    ;;
+  toggle)
+    if [ -e "$DISABLED_FILE" ]; then
+      enable_window_management
+    else
+      disable_window_management
+    fi
+    ;;
+  status)
+    if [ -e "$DISABLED_FILE" ]; then
+      printf 'Omarchy window management is disabled.\n'
+    else
+      printf 'Omarchy window management is enabled.\n'
+    fi
+    ;;
+  *)
+    usage
+    ;;
+esac
